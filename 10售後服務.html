@@ -1,0 +1,634 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>TOEIC 單字遊戲：售後服務</title>
+  <style>
+    :root{--bg:#f6f7fb;--card:#ffffff;--accent:#4b5bdc;--muted:#7b7f9a;--key-bg:#2f3f8f;--key-color:#fff;--status-color:#222}
+    *{box-sizing:border-box}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans TC",Helvetica,Arial;display:flex;align-items:center;justify-content:center;padding:24px;margin:0;background:linear-gradient(180deg,var(--bg),#eef2ff);min-height:100vh}
+    .card{width:800px;max-width:95vw;background:var(--card);border-radius:12px;box-shadow:0 8px 30px rgba(27,38,59,0.08);padding:32px;text-align:center}
+    
+    h1{margin:0 0 8px;font-size:24px;color:var(--accent)}
+    .lead{margin:0 0 20px;color:var(--muted);font-size:14px}
+
+    /* 獎勵進度條 */
+    .rewards{
+      margin:20px 0;
+      padding:16px;
+      background:#f9faff;
+      border-radius:12px;
+      border:2px solid #e6e8ff;
+    }
+    .reward-title{
+      font-size:14px;
+      color:var(--muted);
+      margin-bottom:12px;
+      font-weight:600;
+    }
+    .progress-container{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      margin-bottom:12px;
+    }
+    .progress-bar{
+      flex:1;
+      height:12px;
+      background:#e6e8ff;
+      border-radius:6px;
+      overflow:hidden;
+    }
+    .progress-fill{
+      height:100%;
+      background:linear-gradient(90deg,#4b5bdc,#6b7bff);
+      transition:width 0.3s ease;
+    }
+    .reward-foods{
+      display:flex;
+      gap:12px;
+      justify-content:space-between;
+      margin:8px 0;
+      padding:0 20px;
+    }
+    .food-slot{
+      width:40px;
+      height:40px;
+      background:#fff;
+      border:2px solid #ffc1cc;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:20px;
+      opacity:0.4;
+      transition:all 0.3s ease;
+    }
+    .food-slot.earned{
+      opacity:1;
+      transform:scale(1.1);
+      box-shadow:0 4px 12px rgba(255,105,180,0.3);
+    }
+    .food-slot:nth-child(1).earned{background:#ffe4e6;border-color:#ff69b4;}
+    .food-slot:nth-child(2).earned{background:#fff7e6;border-color:#ff8c00;}
+    .food-slot:nth-child(3).earned{background:#e6f7ff;border-color:#1890ff;}
+    .food-slot:nth-child(4).earned{background:#f6ffed;border-color:#52c41a;}
+    .food-slot:nth-child(5).earned{background:#f9f0ff;border-color:#722ed1;}
+
+    /* 題目區域 */
+    .question-area{
+      margin:20px 0;
+      padding:16px;
+      background:#f7f8ff;
+      border-radius:10px;
+      border:2px solid #e6e8ff;
+    }
+    .question-text{
+      color:var(--accent);
+      font-weight:700;
+      font-size:20px;
+      margin-bottom:8px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:8px;
+    }
+    .part-of-speech{
+      display:inline-block;
+      background:#4b5bdc;
+      color:white;
+      padding:4px 8px;
+      border-radius:12px;
+      font-size:12px;
+      font-weight:600;
+    }
+    .pronunciation-btn{
+      display:inline-block;
+      background:#52c41a;
+      color:white;
+      border:none;
+      padding:6px 12px;
+      border-radius:12px;
+      font-size:12px;
+      font-weight:600;
+      cursor:pointer;
+      transition:background 0.2s;
+    }
+    .pronunciation-btn:hover{
+      background:#389e0d;
+    }
+    .pronunciation-btn:active{
+      transform:scale(0.95);
+    }
+
+    /* 狀態顯示 */
+    .status-display{
+      margin:16px 0;
+      padding:12px;
+      border-radius:10px;
+      background:#f7f8ff;
+      border:2px solid #e6e8ff;
+    }
+    .status-text{font-size:16px;font-weight:700;color:var(--status-color);}
+
+    /* 答案顯示區域 */
+    .answer-display{
+      margin:20px 0;
+      padding:20px;
+      background:#f7f8ff;
+      border-radius:12px;
+      min-height:80px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .answer-letter{
+      min-width:40px;
+      height:50px;
+      border-radius:8px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:20px;
+      font-weight:700;
+      background:#fff;
+      border:2px solid #ddd;
+      color:var(--accent);
+    }
+    .answer-letter.filled{
+      background:linear-gradient(180deg,#e3f2fd,#bbdefb);
+      border-color:var(--accent);
+    }
+
+    /* 虛擬鍵盤 */
+    .keyboard{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      margin:20px 0;
+      align-items:center;
+    }
+    .keyrow{display:flex;gap:6px;justify-content:center}
+    .key{
+      background:var(--key-bg);
+      color:var(--key-color);
+      border:none;
+      border-radius:8px;
+      padding:12px;
+      font-size:14px;
+      font-weight:600;
+      cursor:pointer;
+      min-width:40px;
+      transition:background 0.2s;
+    }
+    .key:hover{background:#1e2d7f}
+    .key.special{background:#666;min-width:60px}
+
+    /* 控制按鈕 */
+    .controls{
+      display:flex;
+      gap:12px;
+      justify-content:center;
+      margin:20px 0;
+      flex-wrap:wrap;
+    }
+    button{
+      background:var(--accent);
+      border:none;
+      color:white;
+      padding:12px 16px;
+      border-radius:10px;
+      font-weight:600;
+      cursor:pointer;
+      transition:background 0.2s;
+    }
+    button:hover{background:#3a4bc8}
+    button.ghost{
+      background:transparent;
+      color:var(--accent);
+      border:2px solid var(--accent);
+    }
+    button.ghost:hover{
+      background:var(--accent);
+      color:white;
+    }
+
+    /* 分數和統計 */
+    .stats{
+      display:flex;
+      gap:30px;
+      justify-content:center;
+      margin:20px 0;
+      flex-wrap:wrap;
+    }
+    .stat-item{
+      text-align:center;
+    }
+    .stat-number{
+      font-size:24px;
+      font-weight:800;
+      color:var(--accent);
+    }
+    .stat-label{
+      font-size:12px;
+      color:var(--muted);
+      margin-top:4px;
+    }
+
+    @media (max-width:600px){
+      .card{padding:20px}
+      .stats{gap:20px}
+      .controls{
+        flex-direction:column;
+        align-items:center;
+      }
+      .controls button{
+        width:100%;
+        max-width:280px;
+        min-width:280px;
+      }
+      .answer-display{gap:4px}
+      .answer-letter{min-width:35px;height:45px;font-size:18px}
+      .key{min-width:28px;padding:8px;font-size:12px}
+      .key.special{min-width:50px;padding:8px 12px}
+      .keyrow{gap:3px}
+    }
+  </style>
+</head>
+<body>
+  <div class="card" role="application" aria-label="TOEIC 售後服務單字遊戲">
+    
+    <h1>TOEIC 單字遊戲：售後服務</h1>
+    <p class="lead">拼出5個單字，領取美食獎勵！主題為售後服務。</p>
+    
+    <div class="rewards">
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill" style="width:0%"></div>
+        </div>
+      </div>
+      <div class="reward-foods" id="foodSlots">
+        <div class="food-slot">🍎</div>
+        <div class="food-slot">🍊</div>
+        <div class="food-slot">🍇</div>
+        <div class="food-slot">🥑</div>
+        <div class="food-slot">🍆</div>
+      </div>
+      <div id="rewardStatus" style="font-size:14px;color:#666;margin-top:8px;">任務進度：完成單字即可獲得美食獎勵</div>
+    </div>
+
+    <div class="question-area">
+      <div class="question-text">
+        <span>題目：<strong id="question">-</strong></span>
+        <span class="part-of-speech" id="partOfSpeech">-</span>
+        <button class="pronunciation-btn" id="pronounceBtn">🔊 發音</button>
+      </div>
+    </div>
+    
+    <div class="status-display">
+      <div id="statusBox" class="status-text">目前狀態：等待答題</div>
+    </div>
+
+    <div class="answer-display" id="answerDisplay">
+      </div>
+
+    <div class="keyboard" id="keyboard"></div>
+
+    <div class="controls">
+      <button id="homeBtn" class="ghost">🏠 回首頁</button>
+      <button id="hintBtn">提示：顯示下一個字母（扣分）</button>
+      <button id="showAnswerBtn" class="ghost">顯示答案（不計分）</button>
+      <button id="checkBtn">提交</button>
+      <button id="newBtn" class="ghost">下一題</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat-item">
+        <div class="stat-number" id="scoreDisplay">0</div>
+        <div class="stat-label">總分</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" id="completedCount">0</div>
+        <div class="stat-label">已完成</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-number" id="hintsCount">0</div>
+        <div class="stat-label">提示次數</div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    (function(){
+      const WORDS = [
+        {word:'apologize', hint:'道歉', pos:'v.'},
+        {word:'compensate', hint:'補償', pos:'v.'},
+        {word:'condition', hint:'狀況', pos:'n.'},
+        {word:'damage', hint:'損害', pos:'n.'},
+        {word:'defective', hint:'有瑕疵的', pos:'adj.'},
+        {word:'deliver', hint:'運送', pos:'v.'},
+        {word:'depend', hint:'依賴', pos:'v.'},
+        {word:'enhance', hint:'提高', pos:'v.'},
+        {word:'entitle', hint:'給予權利', pos:'v.'},
+        {word:'refund', hint:'退款', pos:'n./v.'},
+        {word:'expiration', hint:'到期', pos:'n.'},
+        {word:'insure', hint:'保險', pos:'v.'},
+        {word:'fit', hint:'適合', pos:'v.'},
+        {word:'goods', hint:'商品', pos:'n.'},
+        {word:'guarantee', hint:'保證', pos:'n./v.'},
+        {word:'maintenance', hint:'維修', pos:'n.'},
+        {word:'merchandise', hint:'商品', pos:'n.'},
+        {word:'note', hint:'備註', pos:'n./v.'},
+        {word:'adjustment', hint:'調整', pos:'n.'},
+        {word:'piece', hint:'一塊', pos:'n.'},
+        {word:'product', hint:'產品', pos:'n.'},
+        {word:'exchange', hint:'交換', pos:'n./v.'},
+        {word:'reduce', hint:'減少', pos:'v.'},
+        {word:'reimburse', hint:'核銷', pos:'v.'},
+        {word:'replacement', hint:'替換', pos:'n.'},
+        {word:'return', hint:'退回', pos:'n./v.'},
+        {word:'shipment', hint:'裝運', pos:'n.'},
+        {word:'solve', hint:'解決', pos:'v.'},
+        {word:'warranty', hint:'保固', pos:'n.'},
+        {word:'complaint', hint:'抱怨', pos:'n.'}
+      ];
+
+      // DOM
+      const questionEl = document.getElementById('question');
+      const partOfSpeechEl = document.getElementById('partOfSpeech');
+      const pronounceBtn = document.getElementById('pronounceBtn');
+      const statusBox = document.getElementById('statusBox');
+      const answerDisplay = document.getElementById('answerDisplay');
+      const keyboard = document.getElementById('keyboard');
+      const hintBtn = document.getElementById('hintBtn');
+      const newBtn = document.getElementById('newBtn');
+      const checkBtn = document.getElementById('checkBtn');
+      const showAnswerBtn = document.getElementById('showAnswerBtn');
+      const homeBtn = document.getElementById('homeBtn');
+      const hintsCountEl = document.getElementById('hintsCount');
+      const scoreDisplayEl = document.getElementById('scoreDisplay');
+      const completedCountEl = document.getElementById('completedCount');
+      const progressFill = document.getElementById('progressFill');
+      const foodSlots = document.getElementById('foodSlots');
+      const rewardStatus = document.getElementById('rewardStatus');
+
+      let currentWord = '';
+      let currentHint = '';
+      let currentPos = '';
+      let userInput = '';
+      let hints = 0;
+      let score = 0;
+      let completedWords = 0;
+      let answered = false;
+      let usedWords = new Set();
+      let gameCompleted = false;
+      let currentAudio = null; // 儲存當前播放的音檔
+
+      function pickWord(){
+        const availableWords = WORDS.filter(w => !usedWords.has(w.word));
+        if(availableWords.length === 0){
+          usedWords.clear();
+          return WORDS[Math.floor(Math.random()*WORDS.length)];
+        }
+        return availableWords[Math.floor(Math.random()*availableWords.length)];
+      }
+
+      function playPronunciation(){
+        try {
+          // 停止之前的音檔播放
+          if(currentAudio) {
+            currentAudio.pause();
+            currentAudio.currentTime = 0;
+          }
+          
+          // 創建新的音檔實例
+          currentAudio = new Audio(`sound/10/${currentWord}.mp3`);
+          
+          // 播放音檔
+          currentAudio.play().catch(error => {
+            console.log('音檔載入失敗:', error);
+            setStatus('發音檔案載入失敗，請檢查 sounds 資料夾', 'warn');
+          });
+          
+          // 音檔播放完成後的處理
+          currentAudio.addEventListener('ended', () => {
+            currentAudio = null;
+          });
+          
+        } catch (error) {
+          console.log('發音功能暫時無法使用:', error);
+          setStatus('發音功能暫時無法使用', 'warn');
+        }
+      }
+
+      function updateDisplay(){
+        // 更新答案顯示
+        answerDisplay.innerHTML = '';
+        const targetLength = currentWord.length;
+        
+        for(let i = 0; i < targetLength; i++){
+          const letterEl = document.createElement('div');
+          letterEl.className = 'answer-letter';
+          if(i < userInput.length){
+            letterEl.textContent = userInput[i].toUpperCase();
+            letterEl.classList.add('filled');
+          } else {
+            letterEl.textContent = '_';
+          }
+          answerDisplay.appendChild(letterEl);
+        }
+
+        // 更新統計
+        hintsCountEl.textContent = hints;
+        scoreDisplayEl.textContent = score;
+        completedCountEl.textContent = completedWords;
+        
+        // 更新進度
+        const progress = (completedWords / 5) * 100;
+        progressFill.style.width = progress + '%';
+        
+        // 更新獎勵顯示
+        updateRewardDisplay();
+        
+        // 更新提示按鈕狀態
+        hintBtn.disabled = answered;
+      }
+
+      function updateRewardDisplay(){
+        const slots = foodSlots.children;
+        const foods = ['🍎', '🍊', '🍇', '🥑', '🍆'];
+        const foodNames = ['蘋果', '橘子', '葡萄', '酪梨', '茄子'];
+        
+        // 更新食物獎勵
+        for(let i = 0; i < 5; i++){
+          slots[i].textContent = foods[i];
+          if(i < completedWords){
+            slots[i].classList.add('earned');
+          } else {
+            slots[i].classList.remove('earned');
+          }
+        }
+
+        // 更新狀態文字
+        if(gameCompleted){
+          rewardStatus.textContent = `🎉 任務進度：恭喜完成所有任務！獲得：${foodNames.slice(0, completedWords).join('、')}`;
+        } else {
+          const remaining = 5 - completedWords;
+          const nextFood = completedWords < 5 ? foodNames[completedWords] : '';
+          rewardStatus.textContent = `任務進度：還需完成 ${remaining} 個單字${nextFood ? `來獲得${nextFood}` : ''}`;
+        }
+      }
+
+      function setStatus(text, type){
+        let color = '#222';
+        if(type === 'ok') color = 'green';
+        if(type === 'error') color = '#cc2f2f';
+        if(type === 'warn') color = '#c47a00';
+        statusBox.textContent = `目前狀態：${text}`;
+        statusBox.style.color = color;
+      }
+
+      function newGame(){
+        if(gameCompleted){
+          setStatus(`遊戲已完成！最終得分：${score} 分`, 'ok');
+          return;
+        }
+        
+        const picked = pickWord();
+        currentWord = picked.word.toLowerCase();
+        currentHint = picked.hint;
+        currentPos = picked.pos;
+        userInput = '';
+        answered = false;
+        
+        questionEl.textContent = currentHint;
+        partOfSpeechEl.textContent = currentPos;
+        setStatus('等待答題','info');
+        updateDisplay();
+      }
+
+      function addLetter(letter){
+        if(answered || userInput.length >= currentWord.length) return;
+        userInput += letter.toLowerCase();
+        updateDisplay();
+      }
+
+      function deleteLetter(){
+        if(answered || userInput.length === 0) return;
+        userInput = userInput.slice(0, -1);
+        updateDisplay();
+      }
+
+      function giveHint(){
+        if(answered) return;
+        
+        if(userInput.length < currentWord.length){
+          const nextLetter = currentWord[userInput.length];
+          userInput += nextLetter;
+          hints++;
+          score = Math.max(0, score - 1); // 扣分
+          setStatus(`提示：自動填入字母 "${nextLetter.toUpperCase()}" (扣1分)`, 'warn');
+          updateDisplay();
+        }
+      }
+
+      function checkAnswer(){
+        if(answered) return;
+        
+        if(userInput.length !== currentWord.length){
+          setStatus('請完整輸入所有字母', 'error');
+          return;
+        }
+        
+        if(userInput.toLowerCase() === currentWord.toLowerCase()){
+          // 答對了
+          score += 20;
+          answered = true;
+          completedWords++;
+          usedWords.add(currentWord);
+          
+          if(completedWords >= 5){
+            gameCompleted = true;
+            setStatus(`🎉 恭喜！您已完成所有5個單字！最終得分：${score} 分`, 'ok');
+          } else {
+            setStatus(`答對了！+20 分。已完成 ${completedWords}/5`, 'ok');
+          }
+        } else {
+          userInput = ''; // 清除輸入讓玩家重新拼寫
+          setStatus('答錯了，請重新拼寫', 'error');
+        }
+        updateDisplay();
+      }
+
+      function showAnswer(){
+        if(answered) return;
+        answered = true;
+        userInput = currentWord;
+        setStatus(`答案：${currentWord}`, 'info');
+        updateDisplay();
+      }
+
+      // 建立虛擬鍵盤
+      function buildKeyboard(){
+        const layout = ['qwertyuiop','asdfghjkl','zxcvbnm'];
+        keyboard.innerHTML = '';
+        
+        layout.forEach(row=>{
+          const rowEl = document.createElement('div');
+          rowEl.className = 'keyrow';
+          row.split('').forEach(l=>{
+            const btn = document.createElement('button');
+            btn.className = 'key';
+            btn.textContent = l.toUpperCase();
+            btn.addEventListener('click', ()=> addLetter(l));
+            rowEl.appendChild(btn);
+          });
+          keyboard.appendChild(rowEl);
+        });
+        
+        // 刪除鍵
+        const rowEl = document.createElement('div');
+        rowEl.className = 'keyrow';
+        const del = document.createElement('button');
+        del.className = 'key special';
+        del.textContent = '⌫ 刪除';
+        del.addEventListener('click', deleteLetter);
+        rowEl.appendChild(del);
+        keyboard.appendChild(rowEl);
+      }
+
+      // 事件監聽
+      hintBtn.addEventListener('click', giveHint);
+      newBtn.addEventListener('click', newGame);
+      checkBtn.addEventListener('click', checkAnswer);
+      showAnswerBtn.addEventListener('click', showAnswer);
+      pronounceBtn.addEventListener('click', playPronunciation);
+      homeBtn.addEventListener('click', ()=> {
+        window.location.href = 'index.html';
+      });
+
+      // 實體鍵盤支援
+      document.addEventListener('keydown', (e)=>{
+        if(answered) return;
+        
+        if(e.key >= 'a' && e.key <= 'z'){
+          addLetter(e.key);
+        } else if(e.key === 'Backspace'){
+          deleteLetter();
+        } else if(e.key === 'Enter'){
+          checkAnswer();
+        }
+      });
+
+      // 初始化
+      buildKeyboard();
+      newGame();
+    })();
+  </script>
+</body>
+</html>
