@@ -263,8 +263,9 @@
   <div class="card" role="application" aria-label="TOEIC 房屋修繕單字遊戲">
     
     <h1>TOEIC 單字遊戲：房屋修繕</h1>
-    <p class="lead">拼出5個單字，領取美食獎勵！主題為房屋修繕。</p>
+    <p class="lead">拼出5個單字，領取美食獎勵！可點擊虛擬鍵盤或使用實體鍵盤輸入。</p>
     
+    <!-- 獎勵進度 -->
     <div class="rewards">
       <div class="progress-container">
         <div class="progress-bar">
@@ -281,6 +282,7 @@
       <div id="rewardStatus" style="font-size:14px;color:#666;margin-top:8px;">任務進度：完成單字即可獲得美食獎勵</div>
     </div>
 
+    <!-- 題目 -->
     <div class="question-area">
       <div class="question-text">
         <span>題目：<strong id="question">-</strong></span>
@@ -289,15 +291,20 @@
       </div>
     </div>
     
+    <!-- 狀態顯示 -->
     <div class="status-display">
       <div id="statusBox" class="status-text">目前狀態：等待答題</div>
     </div>
 
+    <!-- 答案顯示區域 -->
     <div class="answer-display" id="answerDisplay">
-      </div>
+      <!-- 字母會動態生成 -->
+    </div>
 
+    <!-- 虛擬鍵盤 -->
     <div class="keyboard" id="keyboard"></div>
 
+    <!-- 控制按鈕 -->
     <div class="controls">
       <button id="homeBtn" class="ghost">🏠 回首頁</button>
       <button id="hintBtn">提示：顯示下一個字母（扣分）</button>
@@ -306,6 +313,7 @@
       <button id="newBtn" class="ghost">下一題</button>
     </div>
 
+    <!-- 統計信息 -->
     <div class="stats">
       <div class="stat-item">
         <div class="stat-number" id="scoreDisplay">0</div>
@@ -326,36 +334,36 @@
   <script>
     (function(){
       const WORDS = [
-        {word:'neighborhood', hint:'鄰近地區', pos:'n.'},
-        {word:'appliance', hint:'電器', pos:'n.'},
+        {word:'neighborhood', hint:'社區、鄰近地區', pos:'n.'},
+        {word:'appliance', hint:'家電用品', pos:'n.'},
         {word:'architect', hint:'建築師', pos:'n.'},
-        {word:'completion', hint:'完成', pos:'n.'},
-        {word:'entrance', hint:'入口', pos:'n.'},
-        {word:'construction', hint:'施工、建造', pos:'n.'},
+        {word:'completion', hint:'完成、竣工', pos:'n.'},
+        {word:'entrance', hint:'入口、玄關', pos:'n.'},
+        {word:'construction', hint:'建設、施工', pos:'n.'},
         {word:'contractor', hint:'承包商', pos:'n.'},
-        {word:'fence', hint:'柵欄', pos:'n.'},
-        {word:'install', hint:'安裝', pos:'v.'},
+        {word:'fence', hint:'圍欄、柵欄', pos:'n.'},
+        {word:'install', hint:'安裝、設置', pos:'v.'},
         {word:'interior', hint:'內部、室內', pos:'n./adj.'},
-        {word:'lamp', hint:'燈', pos:'n.'},
-        {word:'location', hint:'地點', pos:'n.'},
-        {word:'lock', hint:'鎖', pos:'n./v.'},
-        {word:'mechanic', hint:'技工', pos:'n.'},
-        {word:'premises', hint:'營業場所', pos:'n.'},
-        {word:'preparation', hint:'準備', pos:'n.'},
-        {word:'property', hint:'財產、房地產', pos:'n.'},
-        {word:'relocate', hint:'搬遷', pos:'v.'},
-        {word:'renovate', hint:'翻新', pos:'v.'},
-        {word:'rental', hint:'租賃', pos:'n.'},
-        {word:'resident', hint:'居民', pos:'n.'},
-        {word:'restore', hint:'恢復', pos:'v.'},
-        {word:'plumber', hint:'水管工人', pos:'n.'},
-        {word:'adjacent', hint:'鄰近的', pos:'adj.'},
+        {word:'lamp', hint:'燈具', pos:'n.'},
+        {word:'location', hint:'位置、地點', pos:'n.'},
+        {word:'lock', hint:'鎖、鎖定', pos:'n./v.'},
+        {word:'mechanic', hint:'技工、機械師', pos:'n.'},
+        {word:'premises', hint:'房屋、建築物', pos:'n.'},
+        {word:'preparation', hint:'準備、預備', pos:'n.'},
+        {word:'property', hint:'房產、財產', pos:'n.'},
+        {word:'relocate', hint:'搬遷、遷移', pos:'v.'},
+        {word:'renovate', hint:'翻新、整修', pos:'v.'},
+        {word:'rental', hint:'租賃、出租', pos:'n./adj.'},
+        {word:'resident', hint:'居民、住戶', pos:'n.'},
+        {word:'restore', hint:'修復、恢復', pos:'v.'},
+        {word:'plumber', hint:'水管工', pos:'n.'},
+        {word:'adjacent', hint:'相鄰的、毗鄰的', pos:'adj.'},
         {word:'furniture', hint:'家具', pos:'n.'},
-        {word:'foundation', hint:'基礎、基金會', pos:'n.'},
-        {word:'lease', hint:'租約', pos:'n.'},
-        {word:'tenant', hint:'房客', pos:'n.'},
-        {word:'structure', hint:'結構', pos:'n.'},
-        {word:'utilities', hint:'公用事業', pos:'n.'}
+        {word:'foundation', hint:'地基、基礎', pos:'n.'},
+        {word:'lease', hint:'租約、租賃', pos:'n./v.'},
+        {word:'tenant', hint:'租客、承租人', pos:'n.'},
+        {word:'structure', hint:'結構、建築物', pos:'n.'},
+        {word:'utilities', hint:'公用設施', pos:'n.'}
       ];
 
       // DOM
@@ -529,3 +537,106 @@
         
         if(userInput.length < currentWord.length){
           const nextLetter = currentWord[userInput.length];
+          userInput += nextLetter;
+          hints++;
+          score = Math.max(0, score - 1); // 扣分
+          setStatus(`提示：自動填入字母 "${nextLetter.toUpperCase()}" (扣1分)`, 'warn');
+          updateDisplay();
+        }
+      }
+
+      function checkAnswer(){
+        if(answered) return;
+        
+        if(userInput.length !== currentWord.length){
+          setStatus('請完整輸入所有字母', 'error');
+          return;
+        }
+        
+        if(userInput.toLowerCase() === currentWord.toLowerCase()){
+          // 答對了
+          score += 20;
+          answered = true;
+          completedWords++;
+          usedWords.add(currentWord);
+          
+          if(completedWords >= 5){
+            gameCompleted = true;
+            setStatus(`🎉 恭喜！您已完成所有5個單字！最終得分：${score} 分`, 'ok');
+          } else {
+            setStatus(`答對了！+20 分。已完成 ${completedWords}/5`, 'ok');
+          }
+        } else {
+          userInput = ''; // 清除輸入讓玩家重新拼寫
+          setStatus('答錯了，請重新拼寫', 'error');
+        }
+        updateDisplay();
+      }
+
+      function showAnswer(){
+        if(answered) return;
+        answered = true;
+        userInput = currentWord;
+        setStatus(`答案：${currentWord}`, 'info');
+        updateDisplay();
+      }
+
+      // 建立虛擬鍵盤
+      function buildKeyboard(){
+        const layout = ['qwertyuiop','asdfghjkl','zxcvbnm'];
+        keyboard.innerHTML = '';
+        
+        layout.forEach(row=>{
+          const rowEl = document.createElement('div');
+          rowEl.className = 'keyrow';
+          row.split('').forEach(l=>{
+            const btn = document.createElement('button');
+            btn.className = 'key';
+            btn.textContent = l.toUpperCase();
+            btn.addEventListener('click', ()=> addLetter(l));
+            rowEl.appendChild(btn);
+          });
+          keyboard.appendChild(rowEl);
+        });
+        
+        // 刪除鍵
+        const rowEl = document.createElement('div');
+        rowEl.className = 'keyrow';
+        const del = document.createElement('button');
+        del.className = 'key special';
+        del.textContent = '⌫ 刪除';
+        del.addEventListener('click', deleteLetter);
+        rowEl.appendChild(del);
+        keyboard.appendChild(rowEl);
+      }
+
+      // 事件監聽
+      hintBtn.addEventListener('click', giveHint);
+      newBtn.addEventListener('click', newGame);
+      checkBtn.addEventListener('click', checkAnswer);
+      showAnswerBtn.addEventListener('click', showAnswer);
+      pronounceBtn.addEventListener('click', playPronunciation);
+      homeBtn.addEventListener('click', ()=> {
+        window.location.href = 'index.html';
+      });
+
+      // 實體鍵盤支援
+      document.addEventListener('keydown', (e)=>{
+        if(answered) return;
+        
+        if(e.key >= 'a' && e.key <= 'z'){
+          addLetter(e.key);
+        } else if(e.key === 'Backspace'){
+          deleteLetter();
+        } else if(e.key === 'Enter'){
+          checkAnswer();
+        }
+      });
+
+      // 初始化
+      buildKeyboard();
+      newGame();
+    })();
+  </script>
+</body>
+</html>
