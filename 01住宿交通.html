@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>TOEIC 住宿交通單字遊戲</title>
+  <title>TOEIC 單字遊戲：住宿交通</title>
   <style>
     :root{--bg:#f6f7fb;--card:#ffffff;--accent:#4b5bdc;--muted:#7b7f9a;--key-bg:#2f3f8f;--key-color:#fff;--status-color:#222}
     *{box-sizing:border-box}
@@ -262,7 +262,7 @@
 <body>
   <div class="card" role="application" aria-label="TOEIC 住宿交通單字遊戲">
     
-    <h1>TOEIC 住宿交通單字遊戲</h1>
+    <h1>TOEIC 單字遊戲：住宿交通</h1>
     <p class="lead">拼出5個單字，領取美食獎勵！可點擊虛擬鍵盤或使用實體鍵盤輸入。</p>
     
     <!-- 獎勵進度 -->
@@ -306,6 +306,7 @@
 
     <!-- 控制按鈕 -->
     <div class="controls">
+      <button id="homeBtn" class="ghost">🏠 回首頁</button>
       <button id="hintBtn">提示：顯示下一個字母（扣分）</button>
       <button id="showAnswerBtn" class="ghost">顯示答案（不計分）</button>
       <button id="checkBtn">提交</button>
@@ -376,6 +377,7 @@
       const newBtn = document.getElementById('newBtn');
       const checkBtn = document.getElementById('checkBtn');
       const showAnswerBtn = document.getElementById('showAnswerBtn');
+      const homeBtn = document.getElementById('homeBtn');
       const hintsCountEl = document.getElementById('hintsCount');
       const scoreDisplayEl = document.getElementById('scoreDisplay');
       const completedCountEl = document.getElementById('completedCount');
@@ -614,6 +616,9 @@
       checkBtn.addEventListener('click', checkAnswer);
       showAnswerBtn.addEventListener('click', showAnswer);
       pronounceBtn.addEventListener('click', playPronunciation);
+      homeBtn.addEventListener('click', ()=> {
+        window.location.href = 'index.html';
+      });
 
       // 實體鍵盤支援
       document.addEventListener('keydown', (e)=>{
