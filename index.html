@@ -16,14 +16,7 @@
       --border:#e6e8ff;
     }
     *{box-sizing:border-box}
-    body{
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans TC",Helvetica,Arial;
-      margin:0;
-      padding:20px;
-      background:linear-gradient(135deg,var(--bg),#f0f8ff);
-      min-height:100vh;
-      color:#333;
-    }
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans TC",Helvetica,Arial;margin:0;padding:20px;background:linear-gradient(135deg,var(--bg),#f0f8ff);min-height:100vh;color:#333;}
     .container{max-width:900px;margin:0 auto;}
     .header{text-align:center;margin-bottom:30px;padding:30px 20px 20px;background:var(--card);border-radius:20px;box-shadow:0 8px 32px var(--shadow);}
     .main-title{font-size:2.5rem;font-weight:800;background:linear-gradient(135deg,var(--accent),#6b7bff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:0 0 12px;}
@@ -66,26 +59,26 @@
     </div>
     <div class="town-map">
       <!-- 每個區域都初始化 LV:0, 進度:0% -->
-      <a href="01住宿交通.html" class="district"><div><span class="district-icon">🏨</span><h3 class="district-title">住宿交通</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="02餐飲觀光.html" class="district"><div><span class="district-icon">🍽️</span><h3 class="district-title">餐飲觀光</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="03行銷銷售.html" class="district"><div><span class="district-icon">📢</span><h3 class="district-title">行銷銷售</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="04調查研究.html" class="district"><div><span class="district-icon">🔍</span><h3 class="district-title">調查研究</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="05社會財經.html" class="district"><div><span class="district-icon">💰</span><h3 class="district-title">社會財經</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="06部門組織.html" class="district"><div><span class="district-icon">🏢</span><h3 class="district-title">部門組織</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="07招募薪資.html" class="district"><div><span class="district-icon">👔</span><h3 class="district-title">招募薪資</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="08績效訓練.html" class="district"><div><span class="district-icon">📈</span><h3 class="district-title">績效訓練</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="09購物訂單.html" class="district"><div><span class="district-icon">🛒</span><h3 class="district-title">購物訂單</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="10售後服務.html" class="district"><div><span class="district-icon">🛠️</span><h3 class="district-title">售後服務</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="11經營管理.html" class="district"><div><span class="district-icon">⚙️</span><h3 class="district-title">經營管理</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="12生產製造.html" class="district"><div><span class="district-icon">🏭</span><h3 class="district-title">生產製造</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="13辦公溝通.html" class="district"><div><span class="district-icon">💻</span><h3 class="district-title">辦公溝通</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="14行政會議.html" class="district"><div><span class="district-icon">📋</span><h3 class="district-title">行政會議</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="15設備研發.html" class="district"><div><span class="district-icon">🔬</span><h3 class="district-title">設備研發</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="16金融財務.html" class="district"><div><span class="district-icon">💳</span><h3 class="district-title">金融財務</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="17房屋修繕.html" class="district"><div><span class="district-icon">🏠</span><h3 class="district-title">房屋修繕</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="18傳媒出版.html" class="district"><div><span class="district-icon">📺</span><h3 class="district-title">傳媒出版</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="19藝文活動.html" class="district"><div><span class="district-icon">🎭</span><h3 class="district-title">藝文活動</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="20健康生活.html" class="district"><div><span class="district-icon">🌿</span><h3 class="district-title">健康生活</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
+      <a href="01住宿交通.html" class="district" data-category="travel"><div><span class="district-icon">🏨</span><h3 class="district-title">住宿交通</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
+      <a href="02餐飲觀光.html" class="district" data-category="entertainment"><div><span class="district-icon">🍽️</span><h3 class="district-title">餐飲觀光</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
+      <a href="03行銷銷售.html" class="district" data-category="business"><div><span class="district-icon">📢</span><h3 class="district-title">行銷銷售</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
+      <a href="04調查研究.html" class="district" data-category="research"><div><span class="district-icon">🔍</span><h3 class="district-title">調查研究</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
+      <a href="05社會財經.html" class="district" data-category="finance"><div><span class="district-icon">💰</span><h3 class="district-title">社會財經</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
+      <a href="06部門組織.html" class="district" data-category="management"><div><span class="district-icon">🏢</span><h3 class="district-title">部門組織</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
+      <a href="07招募薪資.html" class="district" data-category="hr"><div><span class="district-icon">👔</span><h3 class="district-title">招募薪資</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
+      <a href="08績效訓練.html" class="district" data-category="training"><div><span class="district-icon">📈</span><h3 class="district-title">績效訓練</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
+      <a href="09購物訂單.html" class="district" data-category="commerce"><div><span class="district-icon">🛒</span><h3 class="district-title">購物訂單</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
+      <a href="10售後服務.html" class="district" data-category="service"><div><span class="district-icon">🛠️</span><h3 class="district-title">售後服務</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
+      <a href="11經營管理.html" class="district" data-category="management"><div><span class="district-icon">⚙️</span><h3 class="district-title">經營管理</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
+      <a href="12生產製造.html" class="district" data-category="production"><div><span class="district-icon">🏭</span><h3 class="district-title">生產製造</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
+      <a href="13辦公溝通.html" class="district" data-category="communication"><div><span class="district-icon">💻</span><h3 class="district-title">辦公溝通</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
+      <a href="14行政會議.html" class="district" data-category="administration"><div><span class="district-icon">📋</span><h3 class="district-title">行政會議</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
+      <a href="15設備研發.html" class="district" data-category="tech"><div><span class="district-icon">🔬</span><h3 class="district-title">設備研發</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
+      <a href="16金融財務.html" class="district" data-category="finance"><div><span class="district-icon">💳</span><h3 class="district-title">金融財務</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
+      <a href="17房屋修繕.html" class="district" data-category="maintenance"><div><span class="district-icon">🏠</span><h3 class="district-title">房屋修繕</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
+      <a href="18傳媒出版.html" class="district" data-category="media"><div><span class="district-icon">📺</span><h3 class="district-title">傳媒出版</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
+      <a href="19藝文活動.html" class="district" data-category="entertainment"><div><span class="district-icon">🎭</span><h3 class="district-title">藝文活動</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
+      <a href="20健康生活.html" class="district" data-category="health"><div><span class="district-icon">🌿</span><h3 class="district-title">健康生活</h3></div><div class="level-info"><div class="level-text">LV:0</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
     </div>
     <div class="footer">Copyright © 2025 Comibast All Rights Reserved</div>
   </div>
@@ -93,12 +86,12 @@
     (function(){
       const gameData = {
         districts: {
-          travel: {levels: [0, 0], experience: [0, 0]},
-          entertainment: {levels: [0, 0], experience: [0, 0]},
+          travel: {levels: [0], experience: [0]},
+          entertainment: {levels: [0], experience: [0]},
           business: {levels: [0], experience: [0]},
           research: {levels: [0], experience: [0]},
-          finance: {levels: [0, 0], experience: [0, 0]},
-          management: {levels: [0, 0], experience: [0, 0]},
+          finance: {levels: [0], experience: [0]},
+          management: {levels: [0], experience: [0]},
           hr: {levels: [0], experience: [0]},
           training: {levels: [0], experience: [0]},
           commerce: {levels: [0], experience: [0]},
@@ -112,19 +105,24 @@
           health: {levels: [0], experience: [0]}
         }
       };
+
+      function applyScoreToExperience(){
+        const score = parseInt(localStorage.getItem('lastScore')) || 0;
+        const category = localStorage.getItem('lastCategory');
+
+        if(score > 0 && category && gameData.districts[category]){
+          let district = gameData.districts[category];
+          district.experience[0] += score;
+
+          while(district.experience[0] >= 100){
+            district.levels[0] += 1;
+            district.experience[0] -= 100;
+          }
+
+          localStorage.removeItem('lastScore');
+          localStorage.removeItem('lastCategory');
+        }
+      }
+
       function calculateStatusBars(){
-        const categories = {health: ['health', 'maintenance'],happiness: ['entertainment', 'media'],skill: ['tech', 'research', 'communication'],productivity: ['management', 'production', 'finance', 'business']};
-        Object.keys(categories).forEach(status => {document.getElementById(status + 'Bar').style.width = '0%';});
-      }
-      function generateWelcomeMessage(){
-        document.getElementById('welcomeMessage').textContent = '鎮長，歡迎來到全新版本的 TOEIC Town！從任何一個城區開始您的學習之旅吧！';
-      }
-      function addEntryAnimations(){
-        const districts = document.querySelectorAll('.district');
-        districts.forEach((district, index) => {
-          district.style.opacity = '0';
-          district.style.transform = 'translateY(20px)';
-          district.style.transition = `all 0.6s ease ${index * 0.05}s`;
-          setTimeout(() => {
-            district.style.opacity = '1';
-            district.style.transform = 'translateY
+        const categories = {health: ['health', 'maintenance'],happiness: ['entertainment', 'media'],skill: ['tech
