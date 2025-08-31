@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>TOEIC 單字遊戲：住宿交通</title>
+  <title>TOEIC 單字遊戲：餐飲觀光</title>
   <style>
     :root{--bg:#f6f7fb;--card:#ffffff;--accent:#4b5bdc;--muted:#7b7f9a;--key-bg:#2f3f8f;--key-color:#fff;--status-color:#222}
     *{box-sizing:border-box}
@@ -260,12 +260,11 @@
   </style>
 </head>
 <body>
-  <div class="card" role="application" aria-label="TOEIC 住宿交通單字遊戲">
+  <div class="card" role="application" aria-label="TOEIC 餐飲觀光單字遊戲">
     
-    <h1>TOEIC 單字遊戲：住宿交通</h1>
+    <h1>TOEIC 單字遊戲：餐飲觀光</h1>
     <p class="lead">拼出5個單字，領取美食獎勵！可點擊虛擬鍵盤或使用實體鍵盤輸入。</p>
     
-    <!-- 獎勵進度 -->
     <div class="rewards">
       <div class="progress-container">
         <div class="progress-bar">
@@ -282,7 +281,6 @@
       <div id="rewardStatus" style="font-size:14px;color:#666;margin-top:8px;">任務進度：完成單字即可獲得美食獎勵</div>
     </div>
 
-    <!-- 題目 -->
     <div class="question-area">
       <div class="question-text">
         <span>題目：<strong id="question">-</strong></span>
@@ -291,20 +289,15 @@
       </div>
     </div>
     
-    <!-- 狀態顯示 -->
     <div class="status-display">
       <div id="statusBox" class="status-text">目前狀態：等待答題</div>
     </div>
 
-    <!-- 答案顯示區域 -->
     <div class="answer-display" id="answerDisplay">
-      <!-- 字母會動態生成 -->
-    </div>
+      </div>
 
-    <!-- 虛擬鍵盤 -->
     <div class="keyboard" id="keyboard"></div>
 
-    <!-- 控制按鈕 -->
     <div class="controls">
       <button id="homeBtn" class="ghost">🏠 回首頁</button>
       <button id="hintBtn">提示：顯示下一個字母（扣分）</button>
@@ -313,7 +306,6 @@
       <button id="newBtn" class="ghost">下一題</button>
     </div>
 
-    <!-- 統計信息 -->
     <div class="stats">
       <div class="stat-item">
         <div class="stat-number" id="scoreDisplay">0</div>
@@ -334,36 +326,36 @@
   <script>
     (function(){
       const WORDS = [
-        {word:'transportation', hint:'交通運輸', pos:'n.'},
-        {word:'accessible', hint:'可到達的、無障礙的', pos:'adj.'},
-        {word:'commuter', hint:'通勤者', pos:'n.'},
-        {word:'direction', hint:'方向、指示', pos:'n.'},
-        {word:'fare', hint:'票價、車費', pos:'n.'},
-        {word:'flight', hint:'班機、航班', pos:'n.'},
-        {word:'accommodation', hint:'住宿、膳宿', pos:'n.'},
-        {word:'amenity', hint:'便利設施', pos:'n.'},
-        {word:'depart', hint:'出發、離開', pos:'v.'},
-        {word:'board', hint:'登機、搭乘', pos:'v.'},
-        {word:'claim', hint:'領取、聲稱', pos:'v./n.'},
-        {word:'complimentary', hint:'免費的、讚美的', pos:'adj.'},
-        {word:'cruise', hint:'郵輪旅行', pos:'n./v.'},
-        {word:'delayed', hint:'延遲的', pos:'adj.'},
-        {word:'destination', hint:'目的地', pos:'n.'},
-        {word:'reservation', hint:'預訂、保留', pos:'n.'},
-        {word:'arrive', hint:'到達', pos:'v.'},
-        {word:'postpone', hint:'延後、推遲', pos:'v.'},
-        {word:'reception', hint:'接待處、歡迎會', pos:'n.'},
-        {word:'shuttle', hint:'接駁車、往返', pos:'n./v.'},
-        {word:'status', hint:'狀態、地位', pos:'n.'},
-        {word:'vehicle', hint:'車輛、交通工具', pos:'n.'},
-        {word:'fuel', hint:'燃料', pos:'n./v.'},
-        {word:'gate', hint:'門、閘口', pos:'n.'},
-        {word:'inquire', hint:'詢問、調查', pos:'v.'},
-        {word:'vessel', hint:'船隻、容器', pos:'n.'},
-        {word:'luggage', hint:'行李', pos:'n.'},
-        {word:'railway', hint:'鐵路', pos:'n.'},
-        {word:'rate', hint:'費率、評價', pos:'n./v.'},
-        {word:'route', hint:'路線', pos:'n.'}
+        {word:'tour', hint:'觀光、旅行', pos:'n.'},
+        {word:'valid', hint:'有效的', pos:'adj.'},
+        {word:'guide', hint:'導遊', pos:'n./v.'},
+        {word:'client', hint:'客戶', pos:'n.'},
+        {word:'flavor', hint:'風味', pos:'n.'},
+        {word:'brochure', hint:'小冊子', pos:'n.'},
+        {word:'banquet', hint:'宴會', pos:'n.'},
+        {word:'beverage', hint:'飲料', pos:'n.'},
+        {word:'cafeteria', hint:'自助餐廳', pos:'n.'},
+        {word:'cater', hint:'提供飲食', pos:'v.'},
+        {word:'chef', hint:'廚師', pos:'n.'},
+        {word:'dessert', hint:'甜點', pos:'n.'},
+        {word:'dish', hint:'菜餚', pos:'n.'},
+        {word:'arrangement', hint:'安排', pos:'n.'},
+        {word:'extra', hint:'額外的', pos:'adj./n.'},
+        {word:'agency', hint:'代理處', pos:'n.'},
+        {word:'masterpiece', hint:'傑作', pos:'n.'},
+        {word:'serve', hint:'服務、供應', pos:'v.'},
+        {word:'landmark', hint:'地標', pos:'n.'},
+        {word:'feature', hint:'特色', pos:'n./v.'},
+        {word:'recipe', hint:'食譜', pos:'n.'},
+        {word:'ingredient', hint:'食材', pos:'n.'},
+        {word:'atmosphere', hint:'氣氛', pos:'n.'},
+        {word:'refreshment', hint:'點心、便餐', pos:'n.'},
+        {word:'suggestion', hint:'建議', pos:'n.'},
+        {word:'proceed', hint:'繼續進行', pos:'v.'},
+        {word:'picturesque', hint:'風景如畫的', pos:'adj.'},
+        {word:'itinerary', hint:'行程', pos:'n.'},
+        {word:'historical', hint:'歷史的', pos:'adj.'},
+        {word:'package', hint:'包裹、套裝行程', pos:'n./v.'}
       ];
 
       // DOM
@@ -415,7 +407,7 @@
           }
           
           // 創建新的音檔實例
-          currentAudio = new Audio(`sound/01/${currentWord}.mp3`);
+          currentAudio = new Audio(`sound/02/${currentWord}.mp3`); // 修改路徑
           
           // 播放音檔
           currentAudio.play().catch(error => {
