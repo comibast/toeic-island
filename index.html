@@ -1,130 +1,413 @@
-<!doctype html>
-<html lang="zh-Hant">
+<!DOCTYPE html>
+<html lang="zh-TW">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>TOEIC island - 多益島</title>
-  <style>
-    :root{
-      --bg:#e8f4fd;
-      --card:#ffffff;
-      --accent:#4b5bdc;
-      --muted:#7b7f9a;
-      --hover:#3a4bc8;
-      --shadow:rgba(27,38,59,0.12);
-      --district-bg:#f8faff;
-      --border:#e6e8ff;
-    }
-    *{box-sizing:border-box}
-    body{
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans TC",Helvetica,Arial;
-      margin:0;
-      padding:20px;
-      background:linear-gradient(135deg,var(--bg),#f0f8ff);
-      min-height:100vh;
-      color:#333;
-    }
-    .container{max-width:900px;margin:0 auto;}
-    .header{text-align:center;margin-bottom:30px;padding:30px 20px 20px;background:var(--card);border-radius:20px;box-shadow:0 8px 32px var(--shadow);}
-    .main-title{font-size:2.5rem;font-weight:800;background:linear-gradient(135deg,var(--accent),#6b7bff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin:0 0 12px;}
-    .status-bars{display:grid;grid-template-columns:repeat(4, 1fr);gap:16px;margin:20px 0;padding:0 10px;}
-    .status-item{text-align:center;}
-    .status-icon{font-size:1.8rem;margin-bottom:8px;display:block;}
-    .status-label{font-size:0.8rem;color:var(--muted);margin-bottom:6px;font-weight:600;}
-    .status-bar{height:8px;background:#f0f0f0;border-radius:4px;overflow:hidden;margin-bottom:4px;}
-    .status-fill{height:100%;border-radius:4px;transition:width 0.8s ease;}
-    .status-fill.health{background:#ffb347;}
-    .status-fill.happiness{background:#ff6b6b;}
-    .status-fill.skill{background:#4ecdc4;}
-    .status-fill.productivity{background:#45b7d1;}
-    .welcome-message{background:linear-gradient(135deg,#f8faff,#e8f2ff);border:2px solid var(--border);border-radius:12px;padding:16px;margin:20px 0;text-align:center;font-size:0.95rem;color:#555;min-height:60px;display:flex;align-items:center;justify-content:center;}
-    .town-map{display:grid;grid-template-columns:repeat(5, 1fr);gap:12px;margin:30px 0;}
-    .district{background:var(--card);border-radius:12px;padding:16px 12px;box-shadow:0 2px 12px var(--shadow);transition:all 0.3s ease;cursor:pointer;border:2px solid var(--border);text-decoration:none;color:inherit;position:relative;text-align:center;min-height:140px;display:flex;flex-direction:column;justify-content:space-between;}
-    .district:hover{transform:translateY(-4px);box-shadow:0 8px 25px var(--shadow);border-color:var(--accent);}
-    .district-icon{font-size:2rem;margin-bottom:8px;display:block;}
-    .district-title{font-size:0.85rem;font-weight:700;color:#333;margin:0 0 8px;line-height:1.2;}
-    .level-info{background:var(--district-bg);border-radius:8px;padding:6px 8px;margin-top:auto;}
-    .level-text{font-size:0.75rem;color:var(--accent);font-weight:600;margin-bottom:4px;}
-    .level-bar{height:4px;background:#e0e0e0;border-radius:2px;overflow:hidden;}
-    .level-fill{height:100%;background:linear-gradient(90deg,var(--accent),#6b7bff);border-radius:2px;transition:width 0.5s ease;}
-    .footer{text-align:center;margin-top:40px;padding:20px;color:var(--muted);font-size:0.85rem;}
-    @media (max-width:768px){.town-map{grid-template-columns:repeat(3, 1fr);gap:10px;}.district{padding:12px 8px;min-height:120px;}.district-icon{font-size:1.5rem}.district-title{font-size:0.8rem}.status-bars{gap:12px}.status-icon{font-size:1.5rem}}
-    @media (max-width:480px){.main-title{font-size:2rem}.town-map{grid-template-columns:repeat(2, 1fr)}.status-bars{grid-template-columns:repeat(2, 1fr)}}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TOEIC Island</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', Arial, sans-serif;
+            background: linear-gradient(135deg, #87CEEB 0%, #E0F6FF 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 40px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            margin: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: url('img/Logo.png') no-repeat center;
+            background-size: contain;
+        }
+
+        .player-info {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .player-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #4A90E2;
+        }
+
+        .rename-btn {
+            width: 20px;
+            height: 20px;
+            background: url('img/rename.png') no-repeat center;
+            background-size: contain;
+            cursor: pointer;
+            border: none;
+            background-color: transparent;
+        }
+
+        .level-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .level-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2C5AA0;
+        }
+
+        .level-bar {
+            width: 200px;
+            height: 12px;
+            background: #E0E0E0;
+            border-radius: 6px;
+            overflow: hidden;
+            border: 2px solid #B0B0B0;
+        }
+
+        .level-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #FFD700, #FFA500);
+            width: 25%;
+            transition: width 0.3s ease;
+        }
+
+        .help-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: #4A90E2;
+            color: white;
+            border: none;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 2px 10px rgba(74, 144, 226, 0.3);
+        }
+
+        .help-btn:hover {
+            background: #357ABD;
+            transform: scale(1.05);
+        }
+
+        .welcome-message {
+            background: rgba(255, 255, 255, 0.9);
+            margin: 0 20px 20px;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            font-size: 18px;
+            color: #2C5AA0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .game-area {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .island-container {
+            position: relative;
+            width: 1024px;
+            height: 1024px;
+            max-width: 90vw;
+            max-height: 70vh;
+            background-image: url('img/island_LV1.jpeg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .district-link {
+            position: absolute;
+            padding: 8px 12px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid #4A90E2;
+            border-radius: 20px;
+            text-decoration: none;
+            color: #2C5AA0;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            min-width: 80px;
+        }
+
+        .district-link:hover {
+            background: #4A90E2;
+            color: white;
+            transform: scale(1.1);
+        }
+
+        /* 城區位置配置 */
+        .district-01 { top: 25%; left: 20%; }
+        .district-02 { top: 25%; left: 40%; }
+        .district-03 { top: 25%; right: 20%; }
+        .district-04 { top: 35%; left: 15%; }
+        .district-05 { top: 35%; left: 28%; }
+        .district-06 { top: 35%; left: 41%; }
+        .district-07 { top: 35%; left: 54%; }
+        .district-08 { top: 35%; right: 15%; }
+        .district-09 { top: 45%; left: 15%; }
+        .district-10 { top: 45%; left: 28%; }
+        .district-11 { top: 45%; left: 54%; }
+        .district-12 { top: 45%; right: 15%; }
+        .district-13 { top: 55%; left: 15%; }
+        .district-14 { top: 55%; left: 28%; }
+        .district-15 { top: 55%; left: 41%; }
+        .district-16 { top: 55%; left: 54%; }
+        .district-17 { top: 55%; right: 15%; }
+        .district-18 { top: 70%; left: 28%; }
+        .district-19 { top: 70%; left: 41%; }
+        .district-20 { top: 70%; left: 54%; }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* 說明視窗 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 10% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .modal h2 {
+            color: #4A90E2;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .modal p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 20px;
+                padding: 20px;
+            }
+
+            .logo-section {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .level-bar {
+                width: 150px;
+            }
+
+            .district-link {
+                font-size: 12px;
+                padding: 6px 8px;
+                min-width: 60px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
     <div class="header">
-      <h1 class="main-title">🏙️ TOEIC island</h1>
-      <div class="status-bars">
-        <div class="status-item"><span class="status-icon">🚑</span><div class="status-label">健康度</div><div class="status-bar"><div class="status-fill health" id="healthBar" style="width:0%"></div></div></div>
-        <div class="status-item"><span class="status-icon">🐤</span><div class="status-label">幸福度</div><div class="status-bar"><div class="status-fill happiness" id="happinessBar" style="width:0%"></div></div></div>
-        <div class="status-item"><span class="status-icon">🔧</span><div class="status-label">技術力</div><div class="status-bar"><div class="status-fill skill" id="skillBar" style="width:0%"></div></div></div>
-        <div class="status-item"><span class="status-icon">💰</span><div class="status-label">生產力</div><div class="status-bar"><div class="status-fill productivity" id="productivityBar" style="width:0%"></div></div></div>
-      </div>
-      <div class="welcome-message" id="welcomeMessage">島主，歡迎來到全新版本的 TOEIC island！從任何一個城區開始您的學習之旅吧！</div>
+        <div class="logo-section">
+            <div class="logo"></div>
+            <div class="player-info">
+                <div class="player-name">
+                    <span id="playerName">島主</span>
+                    <button class="rename-btn" onclick="renamePlayer()"></button>
+                </div>
+                <div class="level-info">
+                    <span class="level-text">LV : <span id="playerLevel">1</span></span>
+                    <div class="level-bar">
+                        <div class="level-progress" id="levelProgress"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="help-btn" onclick="showHelp()">?</button>
     </div>
-    <div class="town-map">
-      <!-- 每個區域都初始化 LV:0, 進度:0% -->
-      <a href="01住宿交通.html" class="district"><div><span class="district-icon">🏨</span><h3 class="district-title">住宿交通</h3></div><div class="level-info"><div class="level-text">LV:1</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="02餐飲觀光.html" class="district"><div><span class="district-icon">🍽️</span><h3 class="district-title">餐飲觀光</h3></div><div class="level-info"><div class="level-text">LV:1</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="03行銷銷售.html" class="district"><div><span class="district-icon">📢</span><h3 class="district-title">行銷銷售</h3></div><div class="level-info"><div class="level-text">LV:1</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="04調查研究.html" class="district"><div><span class="district-icon">🔍</span><h3 class="district-title">調查研究</h3></div><div class="level-info"><div class="level-text">LV:1</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="05社會財經.html" class="district"><div><span class="district-icon">💰</span><h3 class="district-title">社會財經</h3></div><div class="level-info"><div class="level-text">LV:1</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="06部門組織.html" class="district"><div><span class="district-icon">🏢</span><h3 class="district-title">部門組織</h3></div><div class="level-info"><div class="level-text">LV:1</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="07招募薪資.html" class="district"><div><span class="district-icon">👔</span><h3 class="district-title">招募薪資</h3></div><div class="level-info"><div class="level-text">LV:1</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="08績效訓練.html" class="district"><div><span class="district-icon">📈</span><h3 class="district-title">績效訓練</h3></div><div class="level-info"><div class="level-text">LV:1</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="09購物訂單.html" class="district"><div><span class="district-icon">🛒</span><h3 class="district-title">購物訂單</h3></div><div class="level-info"><div class="level-text">LV:1</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="10售後服務.html" class="district"><div><span class="district-icon">🛠️</span><h3 class="district-title">售後服務</h3></div><div class="level-info"><div class="level-text">LV:1</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="11經營管理.html" class="district"><div><span class="district-icon">⚙️</span><h3 class="district-title">經營管理</h3></div><div class="level-info"><div class="level-text">LV:1</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="12生產製造.html" class="district"><div><span class="district-icon">🏭</span><h3 class="district-title">生產製造</h3></div><div class="level-info"><div class="level-text">LV:1</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="13辦公溝通.html" class="district"><div><span class="district-icon">💻</span><h3 class="district-title">辦公溝通</h3></div><div class="level-info"><div class="level-text">LV:1</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="14行政會議.html" class="district"><div><span class="district-icon">📋</span><h3 class="district-title">行政會議</h3></div><div class="level-info"><div class="level-text">LV:1</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="15設備研發.html" class="district"><div><span class="district-icon">🔬</span><h3 class="district-title">設備研發</h3></div><div class="level-info"><div class="level-text">LV:1</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="16金融財務.html" class="district"><div><span class="district-icon">💳</span><h3 class="district-title">金融財務</h3></div><div class="level-info"><div class="level-text">LV:1</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="17房屋修繕.html" class="district"><div><span class="district-icon">🏠</span><h3 class="district-title">房屋修繕</h3></div><div class="level-info"><div class="level-text">LV:1</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="18傳媒出版.html" class="district"><div><span class="district-icon">📺</span><h3 class="district-title">傳媒出版</h3></div><div class="level-info"><div class="level-text">LV:1</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="19藝文活動.html" class="district"><div><span class="district-icon">🎭</span><h3 class="district-title">藝文活動</h3></div><div class="level-info"><div class="level-text">LV:1</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-      <a href="20健康生活.html" class="district"><div><span class="district-icon">🌿</span><h3 class="district-title">健康生活</h3></div><div class="level-info"><div class="level-text">LV:1</div><div class="level-bar"><div class="level-fill" style="width:0%"></div></div></div></a>
-    </div>
-    <div class="footer">Copyright © 2025 Comibast All Rights Reserved</div>
+
+    <div class="welcome-message">
+      島主，歡迎來到全新版本的 TOEIC island！從任何一個城區開始您的學習之旅吧！
   </div>
-  <script>
-    (function(){
-      const gameData = {
-        districts: {
-          travel: {levels: [0, 0], experience: [0, 0]},
-          entertainment: {levels: [0, 0], experience: [0, 0]},
-          business: {levels: [0], experience: [0]},
-          research: {levels: [0], experience: [0]},
-          finance: {levels: [0, 0], experience: [0, 0]},
-          management: {levels: [0, 0], experience: [0, 0]},
-          hr: {levels: [0], experience: [0]},
-          training: {levels: [0], experience: [0]},
-          commerce: {levels: [0], experience: [0]},
-          service: {levels: [0], experience: [0]},
-          production: {levels: [0], experience: [0]},
-          communication: {levels: [0], experience: [0]},
-          administration: {levels: [0], experience: [0]},
-          tech: {levels: [0], experience: [0]},
-          maintenance: {levels: [0], experience: [0]},
-          media: {levels: [0], experience: [0]},
-          health: {levels: [0], experience: [0]}
+
+    <div class="game-area">
+        <div class="island-container" id="islandContainer">
+            <a href="01住宿交通.html" class="district-link district-01">住宿交通<br>LV1</a>
+            <a href="02餐飲觀光.html" class="district-link district-02">餐飲觀光<br>LV1</a>
+            <a href="03行銷銷售.html" class="district-link district-03">行銷銷售<br>LV1</a>
+            <a href="04調查研究.html" class="district-link district-04">調查研究<br>LV1</a>
+            <a href="05社會財經.html" class="district-link district-05">社會財經<br>LV1</a>
+            <a href="06部門組織.html" class="district-link district-06">部門組織<br>LV1</a>
+            <a href="07招募薪資.html" class="district-link district-07">招募薪資<br>LV1</a>
+            <a href="08績效訓練.html" class="district-link district-08">績效訓練<br>LV1</a>
+            <a href="09購物訂單.html" class="district-link district-09">購物訂單<br>LV1</a>
+            <a href="10售後服務.html" class="district-link district-10">售後服務<br>LV1</a>
+            <a href="11經營管理.html" class="district-link district-11">經營管理<br>LV1</a>
+            <a href="12生產製造.html" class="district-link district-12">生產製造<br>LV1</a>
+            <a href="13辦公溝通.html" class="district-link district-13">辦公溝通<br>LV1</a>
+            <a href="14行政會議.html" class="district-link district-14">行政會議<br>LV1</a>
+            <a href="15設備研發.html" class="district-link district-15">設備研發<br>LV1</a>
+            <a href="16金融財務.html" class="district-link district-16">金融財務<br>LV1</a>
+            <a href="17房屋修繕.html" class="district-link district-17">房屋修繕<br>LV1</a>
+            <a href="18傳媒出版.html" class="district-link district-18">傳媒出版<br>LV1</a>
+            <a href="19藝文活動.html" class="district-link district-19">藝文活動<br>LV1</a>
+            <a href="20健康生活.html" class="district-link district-20">健康生活<br>LV1</a>
+        </div>
+    </div>
+
+    <div class="footer">
+        Copyright © 2025 Comibast All Rights Reserved
+    </div>
+
+    <!-- 說明視窗 -->
+    <div id="helpModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeHelp()">&times;</span>
+            <h2>遊戲玩法說明</h2>
+            <p>TOEIC單字依照類別分成20區，點選城區進行拼字遊戲。</p>
+            <p>每次5個單字，答對一字20分，滿分100分。</p>
+            <p>可以使用提示下一個字母的功能，每用一次扣一分。</p>
+            <p>分數會轉化成經驗值，提升城區等級。</p>
+            <p>玩家等級為全島城區等級的平均值（四捨五入）。</p>
+            <p>每升10級，主島的模樣會進化，從簡單可愛，變得華麗精緻！</p>
+        </div>
+    </div>
+
+    <script>
+        // 模擬玩家數據
+        let playerData = {
+            name: "島主",
+            level: 1,
+            experience: 25, // 當前經驗值 (0-100)
+            districts: new Array(20).fill(1) // 20個城區的等級
+        };
+
+        // 初始化頁面
+        function initPage() {
+            updatePlayerInfo();
+            updateIslandImage();
         }
-      };
-      function calculateStatusBars(){
-        const categories = {health: ['health', 'maintenance'],happiness: ['entertainment', 'media'],skill: ['tech', 'research', 'communication'],productivity: ['management', 'production', 'finance', 'business']};
-        Object.keys(categories).forEach(status => {document.getElementById(status + 'Bar').style.width = '0%';});
-      }
-      function generateWelcomeMessage(){
-        document.getElementById('welcomeMessage').textContent = '島主，歡迎來到全新版本的 TOEIC island！從任何一個城區開始您的學習之旅吧！';
-      }
-      function addEntryAnimations(){
-        const districts = document.querySelectorAll('.district');
-        districts.forEach((district, index) => {
-          district.style.opacity = '0';
-          district.style.transform = 'translateY(20px)';
-          district.style.transition = `all 0.6s ease ${index * 0.05}s`;
-          setTimeout(() => {
-            district.style.opacity = '1';
-            district.style.transform = 'translateY
+
+        // 更新玩家資訊
+        function updatePlayerInfo() {
+            document.getElementById('playerName').textContent = playerData.name;
+            document.getElementById('playerLevel').textContent = playerData.level;
+            document.getElementById('levelProgress').style.width = playerData.experience + '%';
+        }
+
+        // 更新島嶼圖片
+        function updateIslandImage() {
+            const container = document.getElementById('islandContainer');
+            let imageName = 'img/island_LV1.jpeg';
+            
+            if (playerData.level >= 30) {
+                imageName = 'img/island_LV30.jpeg';
+            } else if (playerData.level >= 20) {
+                imageName = 'img/island_LV20.jpeg';
+            } else if (playerData.level >= 10) {
+                imageName = 'img/island_LV10.jpeg';
+            }
+            
+            container.style.backgroundImage = `url('${imageName}')`;
+        }
+
+        // 改名功能
+        function renamePlayer() {
+            const newName = prompt('請輸入新的島主名稱：', playerData.name);
+            if (newName && newName.trim()) {
+                playerData.name = newName.trim();
+                updatePlayerInfo();
+            }
+        }
+
+        // 顯示說明
+        function showHelp() {
+            document.getElementById('helpModal').style.display = 'block';
+        }
+
+        // 關閉說明
+        function closeHelp() {
+            document.getElementById('helpModal').style.display = 'none';
+        }
+
+        // 點擊模態框外部關閉
+        window.onclick = function(event) {
+            const modal = document.getElementById('helpModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // 計算玩家等級（所有城區等級平均值四捨五入）
+        function calculatePlayerLevel() {
+            const totalLevel = playerData.districts.reduce((sum, level) => sum + level, 0);
+            return Math.round(totalLevel / 20);
+        }
+
+        // 頁面載入時初始化
+        window.onload = initPage;
+    </script>
+</body>
+</html>
