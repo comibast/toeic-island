@@ -108,95 +108,81 @@
       align-items: center;
       margin: 10px;
     }
-
-    /* 電腦版：左右分欄布局 */
-    .game-content {
-      display: flex;
-      gap: 30px;
-      max-width: 1200px;
-      width: 100%;
-      align-items: flex-start;
-    }
-
-    /* 左側島嶼圖片 */
     .island-container {
       position: relative;
-      flex: 1;
-      max-width: 500px;
+      max-width: 1024px;
       border-radius: 20px;
       overflow: hidden;
-      height: auto;
-      display: flex;
     }
     .island-container img {
       width: 100%;
-      height: 100%;
-      object-fit: cover;
+      height: auto;
       display: block;
-    }
-
-    /* 右側城區矩陣 */
-    .cities-section {
-      flex: 1;
-      max-width: 600px;
-      display: flex;
-      flex-direction: column;
     }
 
     /* 城區矩陣 */
     .city-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 15px;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 15px; /* 增加按鈕間距 */
+      margin-top: 25px; /* 增加與島圖的間距 */
+      max-width: 1024px;
       width: 100%;
-      margin-bottom: 20px;
-      flex-grow: 1;
+      padding: 0 10px; /* 左右內邊距，避免貼邊 */
     }
     
     /* 新的城區按鈕樣式 */
     .city-button {
       display: flex;
-      flex-direction: column;
+      flex-direction: column; /* 讓文字和等級垂直排列 */
       justify-content: center;
       align-items: center;
-      height: 90px;
-      background: linear-gradient(135deg, #a8dadc, #457b9d);
+      height: 90px; /* 固定按鈕高度 */
+      background: linear-gradient(135deg, #a8dadc, #457b9d); /* 漸變背景 */
       color: white;
       text-decoration: none;
       border-radius: 12px;
       font-weight: bold;
-      font-size: 16px;
+      font-size: 20px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
       transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
       cursor: pointer;
-      border: none;
-      padding: 5px;
-      text-align: center;
-      white-space: normal;
-      overflow: hidden;
+      border: none; /* 移除預設按鈕邊框 */
+      padding: 5px; /* 內部填充 */
+      text-align: center; /* 文字置中 */
+      white-space: normal; /* 允許文字換行 */
+      overflow: hidden; /* 隱藏超出部分 */
     }
     .city-button:hover {
       transform: translateY(-3px) scale(1.02);
-      background: linear-gradient(135deg, #FFD700, #FFA07A);
+      background: linear-gradient(135deg, #FFD700, #FFA07A); /* 🔥 懸停時變為柔和暖色 */
       box-shadow: 0 6px 12px rgba(0,0,0,0.3);
     }
     .city-button span.city-name {
-      font-size: 1.1em;
-      line-height: 1.2;
+        font-size: 1.2em; /* 城區名稱稍大 */
+        line-height: 1.2;
     }
     .city-button span.city-level {
-      font-size: 0.85em;
-      margin-top: 3px;
-      opacity: 0.9;
+        font-size: 0.9em; /* 等級文字稍小 */
+        margin-top: 3px;
+        opacity: 0.9;
+    }
+
+
+    footer {
+      text-align: center;
+      font-size: 12px;
+      color: #777;
+      padding: 20px 10px; /* 增加上下間距 */
     }
 
     /* 測試按鈕容器 */
     .action-buttons {
       display: flex;
       justify-content: center;
-      gap: 15px;
-      margin: 20px auto;
-      flex-wrap: wrap;
+      gap: 15px; /* 按鈕間距 */
+      margin: 10px auto 20px;
+      flex-wrap: wrap; /* 響應式換行 */
     }
 
     /* 測試和重置按鈕樣式 */
@@ -208,7 +194,7 @@
       cursor: pointer;
       transition: background 0.2s, transform 0.2s;
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      min-width: 120px;
+      min-width: 120px; /* 最小寬度 */
     }
     .action-buttons .btn-test {
       background: #4caf50;
@@ -227,71 +213,27 @@
       transform: translateY(-2px);
     }
 
-    footer {
-      text-align: center;
-      font-size: 12px;
-      color: #777;
-      padding: 20px 10px;
-    }
 
-    /* 響應式：手機時調整為縱向排列，字體加大 */
-    @media (max-width: 968px) {
-      .game-content {
-        flex-direction: column;
-        gap: 20px;
-      }
-      
-      .island-container {
-        max-width: 100%;
-        height: auto;
-      }
-      
-      .cities-section {
-        max-width: 100%;
-      }
-    }
-
+    /* 響應式：手機時縮小字體，改成四欄 */
     @media (max-width: 768px) {
       .city-grid {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
+        grid-template-columns: repeat(4, 1fr); /* 🔥 改成四欄 */
+        gap: 8px; /* 調整手機板間距 */
       }
       .city-button {
-        height: 80px;
-        font-size: 16px;
+        height: 70px; /* 手機版按鈕高度 */
+        font-size: 14px; /* 手機版字體縮小 */
       }
       .city-button span.city-name {
-        font-size: 1.0em;
+        font-size: 0.9em;
       }
       .city-button span.city-level {
-        font-size: 0.85em;
+        font-size: 0.75em;
       }
       .action-buttons .btn {
-        padding: 10px 18px;
-        font-size: 15px;
-        min-width: 110px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .island-container {
-        width: 100%;
-        border-radius: 12px;
-      }
-      
-      .cities-section {
-        width: 100%;
-      }
-      
-      .city-button {
-        height: 75px;
-        font-size: 15px;
-      }
-      .city-button span.city-name {
-        font-size: 0.95em;
-      }
-      .city-button span.city-level {
-        font-size: 0.8em;
+        padding: 8px 15px;
+        font-size: 14px;
+        min-width: 100px;
       }
     }
 
@@ -304,24 +246,24 @@
       background: rgba(0,0,0,0.6);
       justify-content: center;
       align-items: center;
-      z-index: 1000;
+      z-index: 1000; /* 確保在最上層 */
     }
     .modal-content {
       background: #fff;
-      padding: 25px;
+      padding: 25px; /* 增加內邊距 */
       border-radius: 12px;
       max-width: 500px;
       text-align: left;
       box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-      position: relative;
+      position: relative; /* 為了關閉按鈕定位 */
     }
     .modal-close {
-      position: absolute;
+      position: absolute; /* 絕對定位關閉按鈕 */
       top: 10px;
       right: 15px;
       cursor: pointer;
       font-weight: bold;
-      font-size: 24px;
+      font-size: 24px; /* 關閉按鈕字體大一點 */
       color: #777;
     }
     .modal-close:hover {
@@ -331,6 +273,7 @@
 </head>
 <body>
   <header>
+    <!-- 左側玩家資訊 -->
     <div class="player-info">
       <input type="file" id="avatarUpload" accept="image/*" style="display:none">
       <img src="img/avatar.png" alt="avatar" class="avatar" id="avatarImg">
@@ -344,6 +287,7 @@
       </div>
     </div>
 
+    <!-- 右側資源 -->
     <div class="resources">
       <div class="resource"><img src="img/item001.png"><span>0</span></div>
       <div class="resource"><img src="img/item002.png"><span>0</span></div>
@@ -354,26 +298,25 @@
   </header>
 
   <main>
-    <div class="game-content">
-      <div class="island-container">
-        <img src="img/island_LV1.jpeg" alt="island" id="island-img">
-      </div>
-
-      <div class="cities-section">
-        <div class="city-grid" id="cityGrid"></div>
-        
-        <div class="action-buttons">
-          <button class="btn btn-test" id="testLevelBtn">📈 測試升級</button>
-          <button class="btn btn-reset" id="resetProgressBtn">🔄 重置進度</button>
-        </div>
-      </div>
+    <div class="island-container">
+      <img src="img/island_LV1.jpeg" alt="island" id="island-img">
     </div>
+
+    <!-- 20 城區矩陣 (JS 生成) -->
+    <div class="city-grid" id="cityGrid"></div>
   </main>
+
+  <!-- 測試與重置按鈕區塊 -->
+  <div class="action-buttons">
+    <button class="btn btn-test" id="testLevelBtn">🔼 測試升級</button>
+    <button class="btn btn-reset" id="resetProgressBtn">🔄 重置進度</button>
+  </div>
 
   <footer>
     Copyright © 2025 Comibast All Rights Reserved
   </footer>
 
+  <!-- 說明視窗 -->
   <div class="modal" id="helpModal">
     <div class="modal-content">
       <span class="modal-close" id="closeModal">&times;</span>
