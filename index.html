@@ -108,81 +108,95 @@
       align-items: center;
       margin: 10px;
     }
+
+    /* 電腦版：左右分欄布局 */
+    .game-content {
+      display: flex;
+      gap: 30px;
+      max-width: 1200px;
+      width: 100%;
+      align-items: flex-start;
+    }
+
+    /* 左側島嶼圖片 */
     .island-container {
       position: relative;
-      max-width: 1024px;
+      flex: 1;
+      max-width: 500px;
       border-radius: 20px;
       overflow: hidden;
+      height: auto;
+      display: flex;
     }
     .island-container img {
       width: 100%;
-      height: auto;
+      height: 100%;
+      object-fit: cover;
       display: block;
+    }
+
+    /* 右側城區矩陣 */
+    .cities-section {
+      flex: 1;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
     }
 
     /* 城區矩陣 */
     .city-grid {
       display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 15px; /* 增加按鈕間距 */
-      margin-top: 25px; /* 增加與島圖的間距 */
-      max-width: 1024px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
       width: 100%;
-      padding: 0 10px; /* 左右內邊距，避免貼邊 */
+      margin-bottom: 20px;
+      flex-grow: 1;
     }
     
     /* 新的城區按鈕樣式 */
     .city-button {
       display: flex;
-      flex-direction: column; /* 讓文字和等級垂直排列 */
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 90px; /* 固定按鈕高度 */
-      background: linear-gradient(135deg, #a8dadc, #457b9d); /* 漸變背景 */
+      height: 90px;
+      background: linear-gradient(135deg, #a8dadc, #457b9d);
       color: white;
       text-decoration: none;
       border-radius: 12px;
       font-weight: bold;
-      font-size: 20px;
+      font-size: 16px;
       box-shadow: 0 4px 8px rgba(0,0,0,0.2);
       transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
       cursor: pointer;
-      border: none; /* 移除預設按鈕邊框 */
-      padding: 5px; /* 內部填充 */
-      text-align: center; /* 文字置中 */
-      white-space: normal; /* 允許文字換行 */
-      overflow: hidden; /* 隱藏超出部分 */
+      border: none;
+      padding: 5px;
+      text-align: center;
+      white-space: normal;
+      overflow: hidden;
     }
     .city-button:hover {
       transform: translateY(-3px) scale(1.02);
-      background: linear-gradient(135deg, #FFD700, #FFA07A); /* 🔥 懸停時變為柔和暖色 */
+      background: linear-gradient(135deg, #FFD700, #FFA07A);
       box-shadow: 0 6px 12px rgba(0,0,0,0.3);
     }
     .city-button span.city-name {
-        font-size: 1.2em; /* 城區名稱稍大 */
-        line-height: 1.2;
+      font-size: 1.1em;
+      line-height: 1.2;
     }
     .city-button span.city-level {
-        font-size: 0.9em; /* 等級文字稍小 */
-        margin-top: 3px;
-        opacity: 0.9;
-    }
-
-
-    footer {
-      text-align: center;
-      font-size: 12px;
-      color: #777;
-      padding: 20px 10px; /* 增加上下間距 */
+      font-size: 0.85em;
+      margin-top: 3px;
+      opacity: 0.9;
     }
 
     /* 測試按鈕容器 */
     .action-buttons {
       display: flex;
       justify-content: center;
-      gap: 15px; /* 按鈕間距 */
-      margin: 10px auto 20px;
-      flex-wrap: wrap; /* 響應式換行 */
+      gap: 15px;
+      margin: 20px auto;
+      flex-wrap: wrap;
     }
 
     /* 測試和重置按鈕樣式 */
@@ -194,7 +208,7 @@
       cursor: pointer;
       transition: background 0.2s, transform 0.2s;
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-      min-width: 120px; /* 最小寬度 */
+      min-width: 120px;
     }
     .action-buttons .btn-test {
       background: #4caf50;
@@ -213,27 +227,71 @@
       transform: translateY(-2px);
     }
 
+    footer {
+      text-align: center;
+      font-size: 12px;
+      color: #777;
+      padding: 20px 10px;
+    }
 
-    /* 響應式：手機時縮小字體，改成四欄 */
+    /* 響應式：手機時調整為縱向排列，字體加大 */
+    @media (max-width: 968px) {
+      .game-content {
+        flex-direction: column;
+        gap: 20px;
+      }
+      
+      .island-container {
+        max-width: 100%;
+        height: auto;
+      }
+      
+      .cities-section {
+        max-width: 100%;
+      }
+    }
+
     @media (max-width: 768px) {
       .city-grid {
-        grid-template-columns: repeat(4, 1fr); /* 🔥 改成四欄 */
-        gap: 8px; /* 調整手機板間距 */
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
       }
       .city-button {
-        height: 70px; /* 手機版按鈕高度 */
-        font-size: 14px; /* 手機版字體縮小 */
+        height: 80px;
+        font-size: 16px;
       }
       .city-button span.city-name {
-        font-size: 0.9em;
+        font-size: 1.0em;
       }
       .city-button span.city-level {
-        font-size: 0.75em;
+        font-size: 0.85em;
       }
       .action-buttons .btn {
-        padding: 8px 15px;
-        font-size: 14px;
-        min-width: 100px;
+        padding: 10px 18px;
+        font-size: 15px;
+        min-width: 110px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .island-container {
+        width: 100%;
+        border-radius: 12px;
+      }
+      
+      .cities-section {
+        width: 100%;
+      }
+      
+      .city-button {
+        height: 75px;
+        font-size: 15px;
+      }
+      .city-button span.city-name {
+        font-size: 0.95em;
+      }
+      .city-button span.city-level {
+        font-size: 0.8em;
       }
     }
 
@@ -246,24 +304,24 @@
       background: rgba(0,0,0,0.6);
       justify-content: center;
       align-items: center;
-      z-index: 1000; /* 確保在最上層 */
+      z-index: 1000;
     }
     .modal-content {
       background: #fff;
-      padding: 25px; /* 增加內邊距 */
+      padding: 25px;
       border-radius: 12px;
       max-width: 500px;
       text-align: left;
       box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-      position: relative; /* 為了關閉按鈕定位 */
+      position: relative;
     }
     .modal-close {
-      position: absolute; /* 絕對定位關閉按鈕 */
+      position: absolute;
       top: 10px;
       right: 15px;
       cursor: pointer;
       font-weight: bold;
-      font-size: 24px; /* 關閉按鈕字體大一點 */
+      font-size: 24px;
       color: #777;
     }
     .modal-close:hover {
@@ -273,7 +331,6 @@
 </head>
 <body>
   <header>
-    <!-- 左側玩家資訊 -->
     <div class="player-info">
       <input type="file" id="avatarUpload" accept="image/*" style="display:none">
       <img src="img/avatar.png" alt="avatar" class="avatar" id="avatarImg">
@@ -287,7 +344,6 @@
       </div>
     </div>
 
-    <!-- 右側資源 -->
     <div class="resources">
       <div class="resource"><img src="img/item001.png"><span>0</span></div>
       <div class="resource"><img src="img/item002.png"><span>0</span></div>
@@ -298,25 +354,26 @@
   </header>
 
   <main>
-    <div class="island-container">
-      <img src="img/island_LV1.jpeg" alt="island" id="island-img">
+    <div class="game-content">
+      <div class="island-container">
+        <img src="img/island_LV1.jpeg" alt="island" id="island-img">
+      </div>
+
+      <div class="cities-section">
+        <div class="city-grid" id="cityGrid"></div>
+        
+        <div class="action-buttons">
+          <button class="btn btn-test" id="testLevelBtn">📈 測試升級</button>
+          <button class="btn btn-reset" id="resetProgressBtn">🔄 重置進度</button>
+        </div>
+      </div>
     </div>
-
-    <!-- 20 城區矩陣 (JS 生成) -->
-    <div class="city-grid" id="cityGrid"></div>
   </main>
-
-  <!-- 測試與重置按鈕區塊 -->
-  <div class="action-buttons">
-    <button class="btn btn-test" id="testLevelBtn">🔼 測試升級</button>
-    <button class="btn btn-reset" id="resetProgressBtn">🔄 重置進度</button>
-  </div>
 
   <footer>
     Copyright © 2025 Comibast All Rights Reserved
   </footer>
 
-  <!-- 說明視窗 -->
   <div class="modal" id="helpModal">
     <div class="modal-content">
       <span class="modal-close" id="closeModal">&times;</span>
@@ -411,20 +468,15 @@
       saveData(); // 更新後立即存檔
     }
 
-    // 測試升級按鈕
+    // 測試升級按鈕 (已修正)
     const testBtn = document.getElementById('testLevelBtn');
     testBtn.addEventListener('click', () => {
-      // 模擬升級邏輯：增加經驗值，每100點經驗升一級
-      playerExp += 50; // 每次點擊增加50經驗
-      if (playerExp >= playerLevel * 100) { // 假設每級所需經驗為 playerLevel * 100
-        playerLevel++;
-        playerExp = playerExp % 100; // 重置經驗條
-      }
+      // 每次點擊增加10級，並將經驗條設為100%，以模擬等級提升
+      playerLevel = Math.min(playerLevel + 10, 30); // 每次增加10級，最高30級
+      playerExp = 100; // 模擬經驗條滿格
 
-      if (playerLevel > 30) playerLevel = 30; // 最高30級
-      
-      // 20 城區同步升級 (簡化邏輯，實際應根據遊戲分數計算)
-      cityLevels = cityLevels.map(lv => Math.min(lv + 1, 30)); // 每個城區也同步升級，最高30級
+      // 20 城區同步升級
+      cityLevels = cityLevels.map(lv => Math.min(lv + 10, 30)); // 每個城區也同步升級，最高30級
       updateUI();
     });
 
