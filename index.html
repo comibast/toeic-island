@@ -118,21 +118,26 @@
       align-items: flex-start;
     }
 
-    /* 左側島嶼圖片 */
+    /* 左側島嶼圖片容器 */
     .island-container {
       position: relative;
       flex: 1;
-      max-width: 500px;
+      max-width: 500px; /* 限制最大寬度，避免過大 */
       border-radius: 20px;
       overflow: hidden;
-      height: auto;
-      display: flex;
+      display: flex; /* 使用 flexbox 讓圖片居中 */
+      justify-content: center; /* 水平居中 */
+      align-items: center; /* 垂直居中 */
+      background-color: #FFFFFF; /* 如果圖片非方形，背景色可填補空白 */
     }
     .island-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
+      width: auto; /* 寬度自動 */
+      height: auto; /* 高度自動 */
+      max-width: 100%; /* 圖片最大寬度不超過容器 */
+      max-height: 100%; /* 圖片最大高度不超過容器 */
+      display: block; /* 移除圖片底部的空白 */
+      object-fit: contain; /* 確保圖片完整顯示，不裁切 */
+      /* object-fit: cover; */ /* 先前造成裁切的樣式 */
     }
 
     /* 右側城區矩陣 */
@@ -243,7 +248,8 @@
       
       .island-container {
         max-width: 100%;
-        height: auto;
+        height: auto !important; /* 手機版恢復自動高度 */
+        aspect-ratio: 1 / 1; /* 保持正方形比例 */
       }
       
       .cities-section {
@@ -341,6 +347,7 @@
           <div class="level-bar"><div class="level-bar-fill" id="levelBar"></div></div>
         </div>
         <button class="help-btn">?</button>
+
       </div>
     </div>
 
@@ -451,6 +458,10 @@
     const levelBar = document.getElementById('levelBar');
     const islandImg = document.getElementById('island-img');
     const playerNameEl = document.getElementById('playerName'); // 獲取玩家名稱元素
+    const islandContainer = document.querySelector('.island-container');
+    const citiesSection = document.querySelector('.cities-section');
+    const cityGrid = document.getElementById('cityGrid');
+
 
     function updateIsland(level) {
       if (level >= 30) islandImg.src = "img/island_LV30.jpeg";
@@ -459,12 +470,35 @@
       else islandImg.src = "img/island_LV1.jpeg";
     }
 
+    function updateIslandHeight() {
+      // 只有在電腦版（螢幕寬度大於 968px）才執行此邏輯
+      if (window.innerWidth > 968) {
+        // 確保 cityGrid 已經渲染完成，才能正確計算高度
+        // 如果 grid 的 display 是 grid，其 offsetHeight 會包含 gap
+        const totalHeight = cityGrid.offsetHeight;
+        
+        // 設定 islandContainer 的高度
+        islandContainer.style.height = `${totalHeight}px`;
+
+        // 調整 islandContainer 的寬度，讓其維持正方形，並與高度對應
+        // 這裡我們假設圖片是正方形 (1024x1024)，所以寬度也應該是高度
+        islandContainer.style.width = `${totalHeight}px`; 
+        islandContainer.style.maxWidth = '500px'; // 保持最大寬度限制
+      } else {
+        // 手機版恢復自動高度和寬度，並保持正方形比例
+        islandContainer.style.height = 'auto';
+        islandContainer.style.width = 'auto';
+      }
+    }
+
     function updateUI() {
       playerNameEl.textContent = playerName; // 更新玩家名稱
       playerLevelEl.textContent = playerLevel;
       levelBar.style.width = (playerExp % 100) + "%"; // 假設每100點經驗升級
       updateIsland(playerLevel);
       renderCities();
+      // 確保在所有 DOM 元素渲染完成後才計算高度
+      requestAnimationFrame(updateIslandHeight); 
       saveData(); // 更新後立即存檔
     }
 
@@ -535,6 +569,9 @@
     // 初始化
     loadData();
     updateUI();
+
+    // 監聽視窗大小改變，以即時調整高度和寬度
+    window.addEventListener('resize', updateIslandHeight);
   </script>
 </body>
 </html>
