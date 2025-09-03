@@ -1,410 +1,488 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="zh-Hant">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TOEIC Island</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <title>TOEIC Island</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Microsoft JhengHei", sans-serif;
+      background: #f2f7fb;
+      color: #333;
+      overflow-x: hidden;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: 10px 20px;
+      flex-wrap: wrap;
+    }
+    .player-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      flex-wrap: wrap;
+    }
+    .player-info img.avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #ddd;
+      cursor: pointer;
+    }
+    .player-name {
+      font-weight: bold;
+      font-size: 18px;
+    }
+    .rename-icon {
+      width: 22px;
+      height: 22px;
+      cursor: pointer;
+      vertical-align: middle;
+    }
+    .level-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .level {
+      font-size: 14px;
+    }
+    .level-bar {
+      width: 100px;
+      height: 8px;
+      background: #ddd;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-left: 5px;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .level-bar-fill {
+      height: 100%;
+      width: 0%; 
+      background: #4caf50;
+      transition: width 0.3s;
+    }
+    .help-btn {
+      width: 32px;
+      height: 32px;
+      border: none;
+      border-radius: 50%;
+      background: #fff;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 18px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transition: transform 0.2s;
+    }
+    .help-btn:hover {
+      background: #f8f8f8;
+      transform: scale(1.1);
+    }
 
-        body {
-            font-family: 'Microsoft JhengHei', Arial, sans-serif;
-            background: linear-gradient(180deg, #f6f7fb, #eef2ff);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+    /* 資源列 */
+    .resources {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .resource {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 16px;
+    }
+    .resource img {
+      width: 24px;
+      height: 24px;
+    }
 
-        .header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px 20px;
-            background: #f8f9fa;
-            border-bottom: 1px solid #e9ecef;
-        }
+    main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 10px;
+    }
+    .island-container {
+      position: relative;
+      max-width: 1024px;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+    .island-container img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
 
-        .logo-section {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
+    /* 城區矩陣 */
+    .city-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 15px; /* 增加按鈕間距 */
+      margin-top: 25px; /* 增加與島圖的間距 */
+      max-width: 1024px;
+      width: 100%;
+      padding: 0 10px; /* 左右內邊距，避免貼邊 */
+    }
+    
+    /* 新的城區按鈕樣式 */
+    .city-button {
+      display: flex;
+      flex-direction: column; /* 讓文字和等級垂直排列 */
+      justify-content: center;
+      align-items: center;
+      height: 90px; /* 固定按鈕高度 */
+      background: linear-gradient(135deg, #a8dadc, #457b9d); /* 漸變背景 */
+      color: white;
+      text-decoration: none;
+      border-radius: 12px;
+      font-weight: bold;
+      font-size: 20px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: transform 0.2s, background 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      border: none; /* 移除預設按鈕邊框 */
+      padding: 5px; /* 內部填充 */
+      text-align: center; /* 文字置中 */
+      white-space: normal; /* 允許文字換行 */
+      overflow: hidden; /* 隱藏超出部分 */
+    }
+    .city-button:hover {
+      transform: translateY(-3px) scale(1.02);
+      background: linear-gradient(135deg, #FFD700, #FFA07A); /* 🔥 懸停時變為柔和暖色 */
+      box-shadow: 0 6px 12px rgba(0,0,0,0.3);
+    }
+    .city-button span.city-name {
+        font-size: 1.2em; /* 城區名稱稍大 */
+        line-height: 1.2;
+    }
+    .city-button span.city-level {
+        font-size: 0.9em; /* 等級文字稍小 */
+        margin-top: 3px;
+        opacity: 0.9;
+    }
 
-        .logo {
-            width: 50px;
-            height: 50px;
-            background: url('img/Logo.png') no-repeat center;
-            background-size: contain;
-        }
 
-        .player-info {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+    footer {
+      text-align: center;
+      font-size: 12px;
+      color: #777;
+      padding: 20px 10px; /* 增加上下間距 */
+    }
 
-        .player-name {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 18px;
-            font-weight: bold;
-            color: #495057;
-        }
+    /* 測試按鈕容器 */
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 15px; /* 按鈕間距 */
+      margin: 10px auto 20px;
+      flex-wrap: wrap; /* 響應式換行 */
+    }
 
-        .rename-btn {
-            width: 16px;
-            height: 16px;
-            background: url('img/rename.png') no-repeat center;
-            background-size: contain;
-            cursor: pointer;
-            border: none;
-            background-color: transparent;
-        }
+    /* 測試和重置按鈕樣式 */
+    .action-buttons .btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      min-width: 120px; /* 最小寬度 */
+    }
+    .action-buttons .btn-test {
+      background: #4caf50;
+      color: white;
+    }
+    .action-buttons .btn-test:hover {
+      background: #45a049;
+      transform: translateY(-2px);
+    }
+    .action-buttons .btn-reset {
+      background: #f44336;
+      color: white;
+    }
+    .action-buttons .btn-reset:hover {
+      background: #d32f2f;
+      transform: translateY(-2px);
+    }
 
-        .level-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
 
-        .level-text {
-            font-size: 14px;
-            font-weight: bold;
-            color: #6c757d;
-        }
+    /* 響應式：手機時縮小字體，改成四欄 */
+    @media (max-width: 768px) {
+      .city-grid {
+        grid-template-columns: repeat(4, 1fr); /* 🔥 改成四欄 */
+        gap: 8px; /* 調整手機板間距 */
+      }
+      .city-button {
+        height: 70px; /* 手機版按鈕高度 */
+        font-size: 14px; /* 手機版字體縮小 */
+      }
+      .city-button span.city-name {
+        font-size: 0.9em;
+      }
+      .city-button span.city-level {
+        font-size: 0.75em;
+      }
+      .action-buttons .btn {
+        padding: 8px 15px;
+        font-size: 14px;
+        min-width: 100px;
+      }
+    }
 
-        .level-bar {
-            width: 120px;
-            height: 8px;
-            background: #e9ecef;
-            border-radius: 4px;
-            overflow: hidden;
-            border: 1px solid #dee2e6;
-        }
-
-        .level-progress {
-            height: 100%;
-            background: linear-gradient(90deg, #FFD700, #FFA500);
-            width: 25%;
-            transition: width 0.3s ease;
-        }
-
-        .help-btn {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #6c757d;
-            color: white;
-            border: none;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .help-btn:hover {
-            background: #495057;
-        }
-
-        .welcome-message {
-            background: #f8f9fa;
-            margin: 10px 20px 20px;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            font-size: 16px;
-            color: #495057;
-            border: 1px solid #dee2e6;
-        }
-
-        .game-area {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
-
-        .island-container {
-            position: relative;
-            width: 1024px;
-            height: 1024px;
-            max-width: 90vw;
-            max-height: 70vh;
-            background-image: url('img/island_LV1.jpeg');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-        }
-
-        .district-link {
-            position: absolute;
-            padding: 6px 10px;
-            background: rgba(255, 255, 255, 0.95);
-            border: 2px solid #4b5bdc;
-            border-radius: 15px;
-            text-decoration: none;
-            color: #4b5bdc;
-            font-weight: bold;
-            font-size: 13px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(75, 91, 220, 0.15);
-            text-align: center;
-            min-width: 70px;
-        }
-
-        .district-link:hover {
-            background: #4b5bdc;
-            color: white;
-            transform: scale(1.05);
-        }
-
-        /* 城區位置配置 */
-        .district-01 { top: 25%; left: 28%; }
-        .district-02 { top: 25%; left: 41%; }
-        .district-03 { top: 25%; right: 38.5%; }
-        .district-04 { top: 35%; left: 15%; }
-        .district-05 { top: 35%; left: 28%; }
-        .district-06 { top: 35%; left: 41%; }
-        .district-07 { top: 35%; left: 54%; }
-        .district-08 { top: 35%; right: 15%; }
-        .district-09 { top: 45%; left: 15%; }
-        .district-10 { top: 45%; left: 28%; }
-        .district-11 { top: 45%; left: 54%; }
-        .district-12 { top: 45%; right: 15%; }
-        .district-13 { top: 55%; left: 15%; }
-        .district-14 { top: 55%; left: 28%; }
-        .district-15 { top: 55%; left: 41%; }
-        .district-16 { top: 55%; left: 54%; }
-        .district-17 { top: 55%; right: 15%; }
-        .district-18 { top: 70%; left: 28%; }
-        .district-19 { top: 70%; left: 41%; }
-        .district-20 { top: 70%; left: 54%; }
-
-        .footer {
-            text-align: center;
-            padding: 20px;
-            color: #666;
-            font-size: 14px;
-        }
-
-        /* 說明視窗 */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        .modal-content {
-            background-color: white;
-            margin: 10% auto;
-            padding: 30px;
-            border-radius: 20px;
-            width: 80%;
-            max-width: 600px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            line-height: 1;
-        }
-
-        .close:hover {
-            color: #000;
-        }
-
-        .modal h2 {
-            color: #4A90E2;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .modal p {
-            line-height: 1.6;
-            margin-bottom: 15px;
-            color: #333;
-        }
-
-        @media (max-width: 768px) {
-            .header {
-                margin: 12px;
-                padding: 12px 16px;
-            }
-
-            .logo-section {
-                gap: 12px;
-            }
-
-            .level-bar {
-                width: 100px;
-            }
-
-            .district-link {
-                font-size: 11px;
-                padding: 5px 7px;
-                min-width: 55px;
-            }
-        }
-    </style>
+    /* 說明視窗 */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.6);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000; /* 確保在最上層 */
+    }
+    .modal-content {
+      background: #fff;
+      padding: 25px; /* 增加內邊距 */
+      border-radius: 12px;
+      max-width: 500px;
+      text-align: left;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      position: relative; /* 為了關閉按鈕定位 */
+    }
+    .modal-close {
+      position: absolute; /* 絕對定位關閉按鈕 */
+      top: 10px;
+      right: 15px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 24px; /* 關閉按鈕字體大一點 */
+      color: #777;
+    }
+    .modal-close:hover {
+        color: #333;
+    }
+  </style>
 </head>
 <body>
-    <div class="header">
-        <div class="logo-section">
-            <div class="logo"></div>
-            <div class="player-info">
-                <div class="player-name">
-                    <span id="playerName">島主</span>
-                    <button class="rename-btn" onclick="renamePlayer()"></button>
-                </div>
-                <div class="level-info">
-                    <span class="level-text">LV : <span id="playerLevel">1</span></span>
-                    <div class="level-bar">
-                        <div class="level-progress" id="levelProgress"></div>
-					</div>
-                </div>
-            </div>
-			
-									    <div class="welcome-area">
-        島主，歡迎來到全新版本的 TOEIC island！從任何一個城區開始您的學習之旅吧！
-    									</div>
-			
+  <header>
+    <!-- 左側玩家資訊 -->
+    <div class="player-info">
+      <input type="file" id="avatarUpload" accept="image/*" style="display:none">
+      <img src="img/avatar.png" alt="avatar" class="avatar" id="avatarImg">
+      <span class="player-name" id="playerName">島主</span>
+      <img src="img/rename.png" class="rename-icon" alt="rename" id="renameBtn">
+      <div class="level-container">
+        <div class="level">LV: <span id="playerLevel">1</span>
+          <div class="level-bar"><div class="level-bar-fill" id="levelBar"></div></div>
         </div>
-        <button class="help-btn" onclick="showHelp()">?</button>
+        <button class="help-btn">?</button>
+      </div>
     </div>
 
+    <!-- 右側資源 -->
+    <div class="resources">
+      <div class="resource"><img src="img/item001.png"><span>0</span></div>
+      <div class="resource"><img src="img/item002.png"><span>0</span></div>
+      <div class="resource"><img src="img/item003.png"><span>0</span></div>
+      <div class="resource"><img src="img/item004.png"><span>0</span></div>
+      <div class="resource"><img src="img/item005.png"><span>0</span></div>
+    </div>
+  </header>
 
-
-    <div class="game-area">
-        <div class="island-container" id="islandContainer">
-            <a href="01住宿交通.html" class="district-link district-01">住宿交通<br>LV1</a>
-            <a href="02餐飲觀光.html" class="district-link district-02">餐飲觀光<br>LV1</a>
-            <a href="03行銷銷售.html" class="district-link district-03">行銷銷售<br>LV1</a>
-            <a href="04調查研究.html" class="district-link district-04">調查研究<br>LV1</a>
-            <a href="05社會財經.html" class="district-link district-05">社會財經<br>LV1</a>
-            <a href="06部門組織.html" class="district-link district-06">部門組織<br>LV1</a>
-            <a href="07招募薪資.html" class="district-link district-07">招募薪資<br>LV1</a>
-            <a href="08績效訓練.html" class="district-link district-08">績效訓練<br>LV1</a>
-            <a href="09購物訂單.html" class="district-link district-09">購物訂單<br>LV1</a>
-            <a href="10售後服務.html" class="district-link district-10">售後服務<br>LV1</a>
-            <a href="11經營管理.html" class="district-link district-11">經營管理<br>LV1</a>
-            <a href="12生產製造.html" class="district-link district-12">生產製造<br>LV1</a>
-            <a href="13辦公溝通.html" class="district-link district-13">辦公溝通<br>LV1</a>
-            <a href="14行政會議.html" class="district-link district-14">行政會議<br>LV1</a>
-            <a href="15設備研發.html" class="district-link district-15">設備研發<br>LV1</a>
-            <a href="16金融財務.html" class="district-link district-16">金融財務<br>LV1</a>
-            <a href="17房屋修繕.html" class="district-link district-17">房屋修繕<br>LV1</a>
-            <a href="18傳媒出版.html" class="district-link district-18">傳媒出版<br>LV1</a>
-            <a href="19藝文活動.html" class="district-link district-19">藝文活動<br>LV1</a>
-            <a href="20健康生活.html" class="district-link district-20">健康生活<br>LV1</a>
-        </div>
+  <main>
+    <div class="island-container">
+      <img src="img/island_LV1.jpeg" alt="island" id="island-img">
     </div>
 
-    <div class="footer">
-        Copyright © 2025 Comibast All Rights Reserved
-    </div>
+    <!-- 20 城區矩陣 (JS 生成) -->
+    <div class="city-grid" id="cityGrid"></div>
+  </main>
 
-    <!-- 說明視窗 -->
-    <div id="helpModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeHelp()">&times;</span>
-            <h2>遊戲玩法說明</h2>
-            <p>TOEIC單字依照類別分成20區，點選城區進行拼字遊戲。</p>
-            <p>每次5個單字，答對一字20分，滿分100分。</p>
-            <p>可以使用提示下一個字母的功能，每用一次扣一分。</p>
-            <p>分數會轉化成經驗值，提升城區等級。</p>
-            <p>玩家等級為全島城區等級的平均值（四捨五入）。</p>
-            <p>每升10級，主島的模樣會進化，從簡單可愛，變得華麗精緻！</p>
-        </div>
-    </div>
+  <!-- 測試與重置按鈕區塊 -->
+  <div class="action-buttons">
+    <button class="btn btn-test" id="testLevelBtn">🔼 測試升級</button>
+    <button class="btn btn-reset" id="resetProgressBtn">🔄 重置進度</button>
+  </div>
 
-    <script>
-        // 模擬玩家數據
-        let playerData = {
-            name: "島主",
-            level: 1,
-            experience: 25, // 當前經驗值 (0-100)
-            districts: new Array(20).fill(1) // 20個城區的等級
+  <footer>
+    Copyright © 2025 Comibast All Rights Reserved
+  </footer>
+
+  <!-- 說明視窗 -->
+  <div class="modal" id="helpModal">
+    <div class="modal-content">
+      <span class="modal-close" id="closeModal">&times;</span>
+      <h3>玩法說明</h3>
+      <p>
+        TOEIC單字依照類別分成20區，點選城區進行拼字遊戲。<br>
+        每次5個單字，答對一字20分，滿分100分。<br>
+        可以使用提示下一個字母的功能，每用一次扣一分。<br>
+        分數會轉化成經驗值，提升城區等級。<br>
+        玩家等級為全島城區等級的平均值（四捨五入）。<br>
+        每升10級，主島的模樣會進化，從簡單可愛，變得華麗精緻！
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // 城區名稱
+    const cities = [
+      "住宿交通", "餐飲觀光", "行銷銷售", "調查研究", "社會財經",
+      "部門組織", "招募薪資", "績效訓練", "購物訂單", "售後服務",
+      "經營管理", "生產製造", "辦公溝通", "行政會議", "設備研發",
+      "金融財務", "房屋修繕", "傳媒出版", "藝文活動", "健康生活"
+    ];
+
+    // 預設值
+    let playerLevel = 1;
+    let playerExp = 0; // 玩家經驗值，用於顯示進度條
+    let cityLevels = new Array(20).fill(1);
+    let playerName = "島主"; // 新增玩家名稱狀態
+
+    // 嘗試從 localStorage 載入資料
+    function loadData() {
+      const data = localStorage.getItem("toeicIslandSave");
+      if (data) {
+        const save = JSON.parse(data);
+        playerLevel = save.playerLevel || 1;
+        playerExp = save.playerExp || 0;
+        cityLevels = save.cityLevels || new Array(20).fill(1);
+        playerName = save.playerName || "島主"; // 載入玩家名稱
+      }
+    }
+
+    // 儲存資料到 localStorage
+    function saveData() {
+      const save = {
+        playerLevel,
+        playerExp,
+        cityLevels,
+        playerName // 儲存玩家名稱
+      };
+      localStorage.setItem("toeicIslandSave", JSON.stringify(save));
+    }
+
+    // 產生城區矩陣 (更新為按鈕樣式)
+    function renderCities() {
+      const grid = document.getElementById("cityGrid");
+      grid.innerHTML = "";
+      cities.forEach((name, i) => {
+        const level = cityLevels[i];
+        const filename = (i+1).toString().padStart(2,"0") + name + ".html";
+        
+        const button = document.createElement("a"); // 使用a標籤模擬按鈕，方便跳轉
+        button.href = filename;
+        button.className = "city-button";
+        button.innerHTML = `
+          <span class="city-name">${name}</span>
+          <span class="city-level">LV${level}</span>
+        `;
+        grid.appendChild(button);
+      });
+    }
+
+    // 玩家 UI 更新
+    const playerLevelEl = document.getElementById('playerLevel');
+    const levelBar = document.getElementById('levelBar');
+    const islandImg = document.getElementById('island-img');
+    const playerNameEl = document.getElementById('playerName'); // 獲取玩家名稱元素
+
+    function updateIsland(level) {
+      if (level >= 30) islandImg.src = "img/island_LV30.jpeg";
+      else if (level >= 20) islandImg.src = "img/island_LV20.jpeg";
+      else if (level >= 10) islandImg.src = "img/island_LV10.jpeg";
+      else islandImg.src = "img/island_LV1.jpeg";
+    }
+
+    function updateUI() {
+      playerNameEl.textContent = playerName; // 更新玩家名稱
+      playerLevelEl.textContent = playerLevel;
+      levelBar.style.width = (playerExp % 100) + "%"; // 假設每100點經驗升級
+      updateIsland(playerLevel);
+      renderCities();
+      saveData(); // 更新後立即存檔
+    }
+
+    // 測試升級按鈕
+    const testBtn = document.getElementById('testLevelBtn');
+    testBtn.addEventListener('click', () => {
+      // 模擬升級邏輯：增加經驗值，每100點經驗升一級
+      playerExp += 50; // 每次點擊增加50經驗
+      if (playerExp >= playerLevel * 100) { // 假設每級所需經驗為 playerLevel * 100
+        playerLevel++;
+        playerExp = playerExp % 100; // 重置經驗條
+      }
+
+      if (playerLevel > 30) playerLevel = 30; // 最高30級
+      
+      // 20 城區同步升級 (簡化邏輯，實際應根據遊戲分數計算)
+      cityLevels = cityLevels.map(lv => Math.min(lv + 1, 30)); // 每個城區也同步升級，最高30級
+      updateUI();
+    });
+
+    // 重置進度按鈕
+    const resetProgressBtn = document.getElementById('resetProgressBtn');
+    resetProgressBtn.addEventListener('click', () => {
+      if (confirm("確定要重置所有遊戲進度嗎？這將無法復原！")) {
+        localStorage.removeItem("toeicIslandSave");
+        location.reload(); // 重載頁面以回到初始狀態
+      }
+    });
+
+    // 改名功能
+    const renameBtn = document.getElementById('renameBtn');
+    renameBtn.addEventListener('click', () => {
+      const newName = prompt("請輸入新名稱：", playerName); // 使用 playerName 變數
+      if (newName && newName.trim() !== "") {
+        playerName = newName.trim(); // 更新玩家名稱變數
+        updateUI(); // 更新UI並存檔
+      }
+    });
+
+    // 上傳頭像功能
+    const avatarImg = document.getElementById('avatarImg');
+    const avatarUpload = document.getElementById('avatarUpload');
+    avatarImg.addEventListener('click', () => {
+      avatarUpload.click();
+    });
+    avatarUpload.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          avatarImg.src = event.target.result;
         };
+        reader.readAsDataURL(file);
+      }
+    });
 
-        // 初始化頁面
-        function initPage() {
-            updatePlayerInfo();
-            updateIslandImage();
-        }
+    // 說明視窗
+    const helpBtn = document.querySelector('.help-btn');
+    const helpModal = document.getElementById('helpModal');
+    const closeModal = document.getElementById('closeModal');
+    helpBtn.addEventListener('click', () => {
+      helpModal.style.display = 'flex';
+    });
+    closeModal.addEventListener('click', () => {
+      helpModal.style.display = 'none';
+    });
+    window.addEventListener('click', (e) => {
+      if (e.target === helpModal) {
+        helpModal.style.display = 'none';
+      }
+    });
 
-        // 更新玩家資訊
-        function updatePlayerInfo() {
-            document.getElementById('playerName').textContent = playerData.name;
-            document.getElementById('playerLevel').textContent = playerData.level;
-            document.getElementById('levelProgress').style.width = playerData.experience + '%';
-        }
-
-        // 更新島嶼圖片
-        function updateIslandImage() {
-            const container = document.getElementById('islandContainer');
-            let imageName = 'img/island_LV1.jpeg';
-            
-            if (playerData.level >= 30) {
-                imageName = 'img/island_LV30.jpeg';
-            } else if (playerData.level >= 20) {
-                imageName = 'img/island_LV20.jpeg';
-            } else if (playerData.level >= 10) {
-                imageName = 'img/island_LV10.jpeg';
-            }
-            
-            container.style.backgroundImage = `url('${imageName}')`;
-        }
-
-        // 改名功能
-        function renamePlayer() {
-            const newName = prompt('請輸入新的島主名稱：', playerData.name);
-            if (newName && newName.trim()) {
-                playerData.name = newName.trim();
-                updatePlayerInfo();
-            }
-        }
-
-        // 顯示說明
-        function showHelp() {
-            document.getElementById('helpModal').style.display = 'block';
-        }
-
-        // 關閉說明
-        function closeHelp() {
-            document.getElementById('helpModal').style.display = 'none';
-        }
-
-        // 點擊模態框外部關閉
-        window.onclick = function(event) {
-            const modal = document.getElementById('helpModal');
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-        }
-
-        // 計算玩家等級（所有城區等級平均值四捨五入）
-        function calculatePlayerLevel() {
-            const totalLevel = playerData.districts.reduce((sum, level) => sum + level, 0);
-            return Math.round(totalLevel / 20);
-        }
-
-        // 頁面載入時初始化
-        window.onload = initPage;
-    </script>
+    // 初始化
+    loadData();
+    updateUI();
+  </script>
 </body>
 </html>
