@@ -2,6 +2,7 @@
 <html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TOEIC Island</title>
   <style>
     body {
@@ -142,20 +143,18 @@
 
     /* 右側城區矩陣 */
     .cities-section {
-      flex: 1;
-      max-width: 600px;
-      display: flex;
-      flex-direction: column;
+      width: 100%;
+      max-width: 500px;  /* 跟島嶼圖同一個 max-width */
+      margin: 0 auto;    /* 讓它置中 */
     }
 
     /* 城區矩陣 */
     .city-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(4, 1fr); /* 固定4欄 */
       gap: 15px;
-      width: 100%;
+      width: 100%;       /* 滿版佔據 cities-section */
       margin-bottom: 20px;
-      flex-grow: 1;
     }
     
     /* 新的城區按鈕樣式 */
