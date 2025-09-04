@@ -522,11 +522,16 @@
       }
     });
 
-    // 改名功能
+    // 改名功能（限制最多 12 字）
     const renameBtn = document.getElementById('renameBtn');
     renameBtn.addEventListener('click', () => {
-      const newName = prompt("請輸入新名稱：", playerName); // 使用 playerName 變數
+      const maxLength = 12;
+      const newName = prompt(`請輸入新名稱（最多 ${maxLength} 字）：`, playerName);
       if (newName && newName.trim() !== "") {
+        if (newName.trim().length > maxLength) {
+          alert(`名稱不能超過 ${maxLength} 個字！`);
+          return; // 超過長度就不更新
+        }
         playerName = newName.trim(); // 更新玩家名稱變數
         updateUI(); // 更新UI並存檔
       }
