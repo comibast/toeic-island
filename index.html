@@ -21,8 +21,8 @@
     }
     .player-info {
       display: flex;
-      align-items: center; /* 確保名稱和等級列垂直置中 */
-      gap: 4px;            /* 原本 10px 可以縮小一點 */
+      align-items: flex-start; /* 改為 flex-start 讓頭像與文字頂部對齊 */
+      gap: 8px;
       flex: 1;
       flex-wrap: wrap;
     }
@@ -34,6 +34,21 @@
       border: 2px solid #ddd;
       cursor: pointer;
     }
+    
+    /* 新增：玩家文字資訊容器 */
+    .player-text-info {
+      display: flex;
+      flex-direction: column;
+      gap: 8px; /* 名稱列和等級列之間的間距 */
+    }
+    
+    /* 新增：名稱容器，包含名稱和重命名按鈕 */
+    .name-container {
+      display: flex;
+      align-items: center;
+      gap: 6px; /* 名稱和重命名圖標之間的間距 */
+    }
+    
     .player-name {
       font-weight: bold;
       font-size: 18px;
@@ -45,7 +60,6 @@
       vertical-align: middle;
     }
     .level-container {
-	  margin-top: -6px;  /* 拉近與名稱列的距離 */
       display: flex;
       align-items: center;
       gap: 8px;
@@ -88,7 +102,7 @@
 
     /* 資源列 */
     .resources {
-	  margin-top: 10px;   /* 增加與等級列的間距 */
+      margin-top: 10px;
       display: flex;
       align-items: center;
       gap: 10px;
@@ -339,18 +353,26 @@
 <body>
   <header>
     <div class="player-info">
-		<label for="avatarUpload">
-		  <img src="img/avatar.png" alt="avatar" class="avatar" id="avatarImg">
-		</label>
-		<input type="file" id="avatarUpload" accept="image/*" style="display:none">
-      <span class="player-name" id="playerName">島主</span>
-      <img src="img/rename.png" class="rename-icon" alt="rename" id="renameBtn">
-      <div class="level-container">
-        <div class="level">LV: <span id="playerLevel">1</span>
-          <div class="level-bar"><div class="level-bar-fill" id="levelBar"></div></div>
+      <label for="avatarUpload">
+        <img src="img/avatar.png" alt="avatar" class="avatar" id="avatarImg">
+      </label>
+      <input type="file" id="avatarUpload" accept="image/*" style="display:none">
+      
+      <!-- 新的玩家文字資訊結構 -->
+      <div class="player-text-info">
+        <!-- 名稱容器：包含玩家名稱和重命名按鈕 -->
+        <div class="name-container">
+          <span class="player-name" id="playerName">島主</span>
+          <img src="img/rename.png" class="rename-icon" alt="rename" id="renameBtn">
         </div>
-        <button class="help-btn">?</button>
-
+        
+        <!-- 等級容器 -->
+        <div class="level-container">
+          <div class="level">LV: <span id="playerLevel">1</span>
+            <div class="level-bar"><div class="level-bar-fill" id="levelBar"></div></div>
+          </div>
+          <button class="help-btn">?</button>
+        </div>
       </div>
     </div>
 
@@ -462,7 +484,7 @@
     const playerLevelEl = document.getElementById('playerLevel');
     const levelBar = document.getElementById('levelBar');
     const islandImg = document.getElementById('island-img');
-    const playerNameEl = document.getElementById('playerName'); // 獲取玩家名稱元素
+    const playerNameEl = document.getElementById('playerName'); // 獲取玩家名稱元素 
     const islandContainer = document.querySelector('.island-container');
     const citiesSection = document.querySelector('.cities-section');
     const cityGrid = document.getElementById('cityGrid');
