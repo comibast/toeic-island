@@ -337,8 +337,10 @@
 <body>
   <header>
     <div class="player-info">
-      <input type="file" id="avatarUpload" accept="image/*" style="display:none">
-      <img src="img/avatar.png" alt="avatar" class="avatar" id="avatarImg">
+		<label for="avatarUpload">
+		  <img src="img/avatar.png" alt="avatar" class="avatar" id="avatarImg">
+		</label>
+		<input type="file" id="avatarUpload" accept="image/*" style="display:none">
       <span class="player-name" id="playerName">島主</span>
       <img src="img/rename.png" class="rename-icon" alt="rename" id="renameBtn">
       <div class="level-container">
@@ -408,6 +410,7 @@
     let playerExp = 0; // 玩家經驗值，用於顯示進度條
     let cityLevels = new Array(20).fill(1);
     let playerName = "島主"; // 新增玩家名稱狀態
+    let playerAvatar = "img/avatar.png"; // 預設頭像
 
     // 嘗試從 localStorage 載入資料
     function loadData() {
@@ -417,7 +420,8 @@
         playerLevel = save.playerLevel || 1;
         playerExp = save.playerExp || 0;
         cityLevels = save.cityLevels || new Array(20).fill(1);
-        playerName = save.playerName || "島主"; // 載入玩家名稱
+        playerName = save.playerName || "島主";
+        playerAvatar = save.playerAvatar || "img/avatar.png"; // 載入頭像 // 載入玩家名稱
       }
     }
 
@@ -427,7 +431,8 @@
         playerLevel,
         playerExp,
         cityLevels,
-        playerName // 儲存玩家名稱
+        playerName,
+        playerAvatar // 儲存頭像
       };
       localStorage.setItem("toeicIslandSave", JSON.stringify(save));
     }
@@ -493,6 +498,7 @@
       playerNameEl.textContent = playerName; // 更新玩家名稱
       playerLevelEl.textContent = playerLevel;
       levelBar.style.width = (playerExp % 100) + "%"; // 假設每100點經驗升級
+      avatarImg.src = playerAvatar; // 更新頭像
       updateIsland(playerLevel);
       renderCities();
       // 確保在所有 DOM 元素渲染完成後才計算高度
@@ -539,9 +545,6 @@
     // 上傳頭像功能
     const avatarImg = document.getElementById('avatarImg');
     const avatarUpload = document.getElementById('avatarUpload');
-    avatarImg.addEventListener('click', () => {
-      avatarUpload.click();
-    });
 
     avatarUpload.addEventListener('change', (e) => {
       const file = e.target.files[0];
@@ -555,7 +558,9 @@
 
         const reader = new FileReader();
         reader.onload = function(event) {
-          avatarImg.src = event.target.result;
+          playerAvatar = event.target.result; // 存進變數
+          avatarImg.src = playerAvatar;       // 更新畫面
+          saveData();                         // 存檔
         };
         reader.readAsDataURL(file);
       }
