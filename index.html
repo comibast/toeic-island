@@ -542,9 +542,17 @@
     avatarImg.addEventListener('click', () => {
       avatarUpload.click();
     });
+
     avatarUpload.addEventListener('change', (e) => {
       const file = e.target.files[0];
       if (file) {
+        const maxSize = 2 * 1024 * 1024; // 限制 2MB
+        if (file.size > maxSize) {
+          alert("檔案過大，請選擇小於 2MB 的圖片！");
+          avatarUpload.value = ""; // 清空檔案
+          return;
+        }
+
         const reader = new FileReader();
         reader.onload = function(event) {
           avatarImg.src = event.target.result;
@@ -552,6 +560,7 @@
         reader.readAsDataURL(file);
       }
     });
+
 
     // 說明視窗
     const helpBtn = document.querySelector('.help-btn');
