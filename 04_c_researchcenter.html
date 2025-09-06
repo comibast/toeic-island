@@ -45,36 +45,37 @@
       background:linear-gradient(90deg,#4b5bdc,#6b7bff);
       transition:width 0.3s ease;
     }
-    .reward-foods{
+    .reward-gems{
       display:flex;
       gap:12px;
       justify-content:space-between;
       margin:8px 0;
       padding:0 20px;
     }
-    .food-slot{
+    .gem-slot{
       width:40px;
       height:40px;
       background:#fff;
-      border:2px solid #ffc1cc;
+      border:2px solid #ddd;
       border-radius:50%;
       display:flex;
       align-items:center;
       justify-content:center;
-      font-size:20px;
       opacity:0.4;
       transition:all 0.3s ease;
     }
-    .food-slot.earned{
+	.gem-slot img {
+	  width: 32px;
+      height: 32px;
+      object-fit: contain;
+	}
+    .gem-slot.earned{
       opacity:1;
       transform:scale(1.1);
-      box-shadow:0 4px 12px rgba(255,105,180,0.3);
+      box-shadow:0 4px 12px rgba(75, 91, 220, 0.3);
+	  border-color: #4b5bdc;
     }
-    .food-slot:nth-child(1).earned{background:#ffe4e6;border-color:#ff69b4;}
-    .food-slot:nth-child(2).earned{background:#fff7e6;border-color:#ff8c00;}
-    .food-slot:nth-child(3).earned{background:#e6f7ff;border-color:#1890ff;}
-    .food-slot:nth-child(4).earned{background:#f6ffed;border-color:#52c41a;}
-    .food-slot:nth-child(5).earned{background:#f9f0ff;border-color:#722ed1;}
+
 
     /* 題目區域 */
     .question-area{
@@ -263,24 +264,25 @@
   <div class="card" role="application" aria-label="TOEIC 調查研究單字遊戲">
     
     <h1>TOEIC 單字遊戲：調查研究</h1>
-    <p class="lead">拼出5個單字，領取美食獎勵！可點擊虛擬鍵盤或使用實體鍵盤輸入。</p>
+    <p class="lead">拼出4個單字，領取元素獎勵！可點擊虛擬鍵盤或使用實體鍵盤輸入。</p>
     
+    <!-- 獎勵進度 -->
     <div class="rewards">
       <div class="progress-container">
         <div class="progress-bar">
           <div class="progress-fill" id="progressFill" style="width:0%"></div>
         </div>
       </div>
-      <div class="reward-foods" id="foodSlots">
-        <div class="food-slot">🍎</div>
-        <div class="food-slot">🍊</div>
-        <div class="food-slot">🍇</div>
-        <div class="food-slot">🥑</div>
-        <div class="food-slot">🍆</div>
+      <div class="reward-gems" id="gemSlots">
+        <div class="gem-slot"><img src="img/gems/gem_earth_locked.png" alt="地元素"></div>
+        <div class="gem-slot"><img src="img/gems/gem_fire_locked.png" alt="火元素"></div>
+        <div class="gem-slot"><img src="img/gems/gem_water_locked.png" alt="水元素"></div>
+        <div class="gem-slot"><img src="img/gems/gem_wind_locked.png" alt="風元素"></div>
       </div>
-      <div id="rewardStatus" style="font-size:14px;color:#666;margin-top:8px;">任務進度：完成單字即可獲得美食獎勵</div>
+      <div id="rewardStatus" style="font-size:14px;color:#666;margin-top:8px;">任務進度：完成單字即可獲得獎勵</div>
     </div>
 
+    <!-- 題目 -->
     <div class="question-area">
       <div class="question-text">
         <span>題目：<strong id="question">-</strong></span>
@@ -289,15 +291,20 @@
       </div>
     </div>
     
+    <!-- 狀態顯示 -->
     <div class="status-display">
       <div id="statusBox" class="status-text">目前狀態：等待答題</div>
     </div>
 
+    <!-- 答案顯示區域 -->
     <div class="answer-display" id="answerDisplay">
-      </div>
+      <!-- 字母會動態生成 -->
+    </div>
 
+    <!-- 虛擬鍵盤 -->
     <div class="keyboard" id="keyboard"></div>
 
+    <!-- 控制按鈕 -->
     <div class="controls">
       <button id="homeBtn" class="ghost">🏠 回首頁</button>
       <button id="hintBtn">提示：顯示下一個字母（扣分）</button>
@@ -306,6 +313,7 @@
       <button id="newBtn" class="ghost">下一題</button>
     </div>
 
+    <!-- 統計信息 -->
     <div class="stats">
       <div class="stat-item">
         <div class="stat-number" id="scoreDisplay">0</div>
@@ -374,7 +382,7 @@
       const scoreDisplayEl = document.getElementById('scoreDisplay');
       const completedCountEl = document.getElementById('completedCount');
       const progressFill = document.getElementById('progressFill');
-      const foodSlots = document.getElementById('foodSlots');
+      const gemSlots = document.getElementById('gemSlots');
       const rewardStatus = document.getElementById('rewardStatus');
 
       let currentWord = '';
@@ -407,7 +415,7 @@
           }
           
           // 創建新的音檔實例
-          currentAudio = new Audio(`sound/04/${currentWord}.mp3`); // 修改路徑
+          currentAudio = new Audio(`sound/04/${currentWord}.mp3`);
           
           // 播放音檔
           currentAudio.play().catch(error => {
@@ -449,7 +457,7 @@
         completedCountEl.textContent = completedWords;
         
         // 更新進度
-        const progress = (completedWords / 5) * 100;
+        const progress = (completedWords / 4) * 100;
         progressFill.style.width = progress + '%';
         
         // 更新獎勵顯示
@@ -460,27 +468,34 @@
       }
 
       function updateRewardDisplay(){
-        const slots = foodSlots.children;
-        const foods = ['🍎', '🍊', '🍇', '🥑', '🍆'];
-        const foodNames = ['蘋果', '橘子', '葡萄', '酪梨', '茄子'];
+        const slots = gemSlots.children;
+        const gems = [
+			{ locked: 'img/gems/gem_earth_locked.png', unlocked: 'img/gems/gem_earth.png', name: '地元素' },
+			{ locked: 'img/gems/gem_fire_locked.png', unlocked: 'img/gems/gem_fire.png', name: '火元素' },
+			{ locked: 'img/gems/gem_water_locked.png', unlocked: 'img/gems/gem_water.png', name: '水元素' },
+			{ locked: 'img/gems/gem_wind_locked.png', unlocked: 'img/gems/gem_wind.png', name: '風元素' }
+			  ];
         
-        // 更新食物獎勵
-        for(let i = 0; i < 5; i++){
-          slots[i].textContent = foods[i];
-          if(i < completedWords){
+        // 更新元素獎勵
+        for(let i = 0; i < 4; i++){
+          const img = slots[i].querySelector('img');
+          if(i < completedWords && completedWords <= 4){
+			  img.src = gems[i].unlocked;
             slots[i].classList.add('earned');
           } else {
+			  img.src = gems[i].locked;
             slots[i].classList.remove('earned');
           }
         }
 
         // 更新狀態文字
         if(gameCompleted){
-          rewardStatus.textContent = `🎉 任務進度：恭喜完成所有任務！獲得：${foodNames.slice(0, completedWords).join('、')}`;
+			const earnedGems = gems.slice(0, Math.min(completedWords, 4)).map(g => g.name);
+          rewardStatus.textContent = `🎉 任務進度：恭喜完成所有任務！獲得：${earnedGems.join('、')}`;
         } else {
-          const remaining = 5 - completedWords;
-          const nextFood = completedWords < 5 ? foodNames[completedWords] : '';
-          rewardStatus.textContent = `任務進度：還需完成 ${remaining} 個單字${nextFood ? `來獲得${nextFood}` : ''}`;
+          const remaining = 4 - completedWords;
+          const nextGem = completedWords < 4 ? gems[completedWords].name : '';
+          rewardStatus.textContent = `任務進度：還需完成 ${remaining} 個單字${nextGem ? `來獲得${nextGem}` : ''}`;
         }
       }
 
@@ -531,7 +546,6 @@
           const nextLetter = currentWord[userInput.length];
           userInput += nextLetter;
           hints++;
-
           score = Math.max(0, score - 1); // 扣分
           setStatus(`提示：自動填入字母 "${nextLetter.toUpperCase()}" (扣1分)`, 'warn');
           updateDisplay();
@@ -548,16 +562,16 @@
         
         if(userInput.toLowerCase() === currentWord.toLowerCase()){
           // 答對了
-          score += 20;
+          score += 25;
           answered = true;
           completedWords++;
           usedWords.add(currentWord);
           
-          if(completedWords >= 5){
+          if(completedWords >= 4){
             gameCompleted = true;
-            setStatus(`🎉 恭喜！您已完成所有5個單字！最終得分：${score} 分`, 'ok');
+            setStatus(`🎉 恭喜！您已完成所有4個單字！最終得分：${score} 分`, 'ok');
           } else {
-            setStatus(`答對了！+20 分。已完成 ${completedWords}/5`, 'ok');
+            setStatus(`答對了！+25 分。已完成 ${completedWords}/4`, 'ok');
           }
         } else {
           userInput = ''; // 清除輸入讓玩家重新拼寫
