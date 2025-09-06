@@ -464,12 +464,24 @@
     // 產生城區矩陣 (更新為按鈕樣式)
     function renderCities() {
       const grid = document.getElementById("cityGrid");
-      grid.innerHTML = "";
-      cities.forEach((name, i) => {
-        const level = cityLevels[i];
-        const filename = (i+1).toString().padStart(2,"0") + name + ".html";
-        
-        const button = document.createElement("a"); // 使用a標籤模擬按鈕，方便跳轉
+      grid.innerHTML = "";						// 如要換內頁連結，修改這行以下
+        										// 新增檔名對應表
+  const cityFiles = [
+    "01_c_hotel.html", "02_c_restaurant.html", "03_c_mediacenter.html",
+    "04_c_researchcenter.html", "05_c_stockexchange.html", "06_c_headquarters.html",
+    "07_c_hrcenter.html", "08_c_academy.html", "09_c_mall.html",
+    "10_c_callcenter.html", "11_c_businesstower.html", "12_c_factory.html",
+    "13_c_convention.html", "14_c_cityhall.html", "15_c_lab.html",
+    "16_c_bank.html", "17_c_engineerfirm.html", "18_c_tvstation.html",
+    "19_c_artcenter.html", "20_c_hospital.html"
+  ];
+  
+  cities.forEach((name, i) => {
+    const level = cityLevels[i];
+    const filename = cityFiles[i]; 				
+	  											// 使用對應表
+        										// 如要換內頁連結，修改這行以前
+        const button = document.createElement("a"); 
         button.href = filename;
         button.className = "city-button";
         button.innerHTML = `
