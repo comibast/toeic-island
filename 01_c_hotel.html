@@ -266,7 +266,6 @@
     <h1>TOEIC 單字遊戲：住宿交通</h1>
     <p class="lead">拼出4個單字，領取元素獎勵！可點擊虛擬鍵盤或使用實體鍵盤輸入。</p>
     
-    <!-- 獎勵進度 -->
     <div class="rewards">
       <div class="progress-container">
         <div class="progress-bar">
@@ -282,7 +281,6 @@
       <div id="rewardStatus" style="font-size:14px;color:#666;margin-top:8px;">任務進度：完成單字即可獲得獎勵</div>
     </div>
 
-    <!-- 題目 -->
     <div class="question-area">
       <div class="question-text">
         <span>題目：<strong id="question">-</strong></span>
@@ -291,20 +289,15 @@
       </div>
     </div>
     
-    <!-- 狀態顯示 -->
     <div class="status-display">
       <div id="statusBox" class="status-text">目前狀態：等待答題</div>
     </div>
 
-    <!-- 答案顯示區域 -->
     <div class="answer-display" id="answerDisplay">
-      <!-- 字母會動態生成 -->
-    </div>
+      </div>
 
-    <!-- 虛擬鍵盤 -->
     <div class="keyboard" id="keyboard"></div>
 
-    <!-- 控制按鈕 -->
     <div class="controls">
       <button id="homeBtn" class="ghost">🏠 回首頁</button>
       <button id="hintBtn">提示：顯示下一個字母（扣分）</button>
@@ -313,7 +306,6 @@
       <button id="newBtn" class="ghost">下一題</button>
     </div>
 
-    <!-- 統計信息 -->
     <div class="stats">
       <div class="stat-item">
         <div class="stat-number" id="scoreDisplay">0</div>
@@ -489,13 +481,15 @@
         }
 
         // 更新狀態文字
-        if(gameCompleted){
-			const earnedGems = gems.slice(0, Math.min(completedWords, 4)).map(g => g.name);
-          rewardStatus.textContent = `🎉 任務進度：恭喜完成所有任務！獲得：${earnedGems.join('、')}`;
+        const completed = completedWords;
+        const nextGem = completed < 4 ? gems[completed].name : '';
+
+        if (completed === 4) {
+            rewardStatus.textContent = `🎉 任務進度：恭喜完成所有任務！獲得：地元素、火元素、水元素、風元素`;
+        } else if (completed === 0) {
+            rewardStatus.textContent = `任務進度：完成單字即可獲得獎勵。第一個獎勵：${nextGem}`;
         } else {
-          const remaining = 4 - completedWords;
-          const nextGem = completedWords < 4 ? gems[completedWords].name : '';
-          rewardStatus.textContent = `任務進度：還需完成 ${remaining} 個單字${nextGem ? `來獲得${nextGem}` : ''}`;
+            rewardStatus.textContent = `任務進度：已解鎖 ${completed} 個元素。再完成一個單字，即可獲得${nextGem}！`;
         }
       }
 
@@ -571,7 +565,9 @@
             gameCompleted = true;
             setStatus(`🎉 恭喜！您已完成所有4個單字！最終得分：${score} 分`, 'ok');
           } else {
-            setStatus(`答對了！+25 分。已完成 ${completedWords}/4`, 'ok');
+            const scoreChange = 25 - hints;
+            setStatus(`答對了！+${scoreChange} 分。已完成 ${completedWords}/4`, 'ok');
+            hints = 0; // 重置提示次數
           }
         } else {
           userInput = ''; // 清除輸入讓玩家重新拼寫
