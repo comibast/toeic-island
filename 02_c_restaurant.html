@@ -617,14 +617,24 @@
           keyboard.appendChild(rowEl);
         });
         
-        // 刪除鍵
+        // 刪除和回首頁鍵
         const rowEl = document.createElement('div');
         rowEl.className = 'keyrow';
+        
+        const home = document.createElement('button');
+        home.className = 'key special';
+        home.textContent = '🏠 首頁';
+        home.addEventListener('click', ()=> {
+          window.location.href = 'index.html';
+        });
+        rowEl.appendChild(home);
+
         const del = document.createElement('button');
         del.className = 'key special';
         del.textContent = '⌫ 刪除';
         del.addEventListener('click', deleteLetter);
         rowEl.appendChild(del);
+
         keyboard.appendChild(rowEl);
       }
 
