@@ -126,7 +126,7 @@
 
     /* 狀態顯示 */
     .status-display{
-      margin:16px 0;
+      margin:20px 0; /* 調整 margin，使其在題目上方 */
       padding:12px;
       border-radius:10px;
       background:#f7f8ff;
@@ -264,7 +264,7 @@
   <div class="card" role="application" aria-label="TOEIC 餐飲觀光單字遊戲">
     
     <h1>TOEIC 單字遊戲：餐飲觀光</h1>
-  
+    
     <div class="rewards">
       <div class="progress-container">
         <div class="progress-bar">
@@ -279,6 +279,10 @@
       </div>
       <div id="rewardStatus" style="font-size:14px;color:#666;margin-top:8px;">任務進度：完成單字即可獲得獎勵</div>
     </div>
+    
+    <div class="status-display">
+      <div id="statusBox" class="status-text">目前狀態：等待答題</div>
+    </div>
 
     <div class="question-area">
       <div class="question-text">
@@ -288,10 +292,6 @@
       </div>
     </div>
     
-    <div class="status-display">
-      <div id="statusBox" class="status-text">目前狀態：等待答題</div>
-    </div>
-
     <div class="answer-display" id="answerDisplay">
       </div>
 
@@ -519,7 +519,7 @@
         currentHint = picked.hint;
         currentPos = picked.pos;
         userInput = '';
-        hints = 0;
+        hints = 0; // 重置本題提示次數
         answered = false;
         
         questionEl.textContent = currentHint;
@@ -547,7 +547,7 @@
           const nextLetter = currentWord[userInput.length];
           userInput += nextLetter;
           hints++;
-          totalHints++; // 新增這行，紀錄總提示次數
+          totalHints++; // 紀錄總提示次數
           setStatus(`提示：自動填入字母 "${nextLetter.toUpperCase()}" (扣1分)`, 'warn');
           updateDisplay();
         }
@@ -563,7 +563,7 @@
         
         if(userInput.toLowerCase() === currentWord.toLowerCase()){
           // 答對了
-          score += (25 - hints); // 只在這裡計算並加到總分
+          score += (25 - hints); // 總分增加這次的得分
           answered = true;
           completedWords++;
           usedWords.add(currentWord);
