@@ -11,7 +11,7 @@
     .card{width:800px;max-width:95vw;background:var(--card);border-radius:12px;box-shadow:0 8px 30px rgba(27,38,59,0.08);padding:32px;text-align:center}
     
     h1{margin:0 0 8px;font-size:24px;color:var(--accent)}
-    .lead{margin:0 0 20px;color:var(--muted);font-size:14px}
+    /* .lead 類別已移除 */
 
     /* 獎勵進度條 */
     .rewards{
@@ -160,6 +160,7 @@
       border:2px solid #ddd;
       color:var(--accent);
     }
+
     .answer-letter.filled{
       background:linear-gradient(180deg,#e3f2fd,#bbdefb);
       border-color:var(--accent);
@@ -244,18 +245,34 @@
       .card{padding:20px}
       .stats{gap:20px}
       .controls {
-        flex-direction: row;
+        flex-direction: row; /* 讓按鈕可以換行 */
         flex-wrap: wrap;
         align-items: center;
-        justify-content: center;
+        justify-content: center; /* 居中對齊 */
+        gap: 8px; /* 增加按鈕間距 */
       }
       .controls button {
-        flex: 1 1 45%;
+        flex: 1 1 40%; /* 讓按鈕可以伸展並換行 */
+        max-width: 150px; /* 限制按鈕最大寬度，避免過長 */
+        padding: 10px 12px; /* 調整按鈕內距 */
+        font-size: 13px; /* 調整字體大小 */
+      }
+      /* 確保提交按鈕稍微靠右 */
+      .controls #checkBtn {
+        margin-left: auto; /* 推到右邊 */
+        flex-basis: auto; /* 讓寬度由內容決定 */
+      }
+      /* 調整刪除鍵和回首頁鍵的樣式 */
+      .keyboard .key.special {
+          min-width: 50px;
+          padding: 8px 12px;
+      }
+      .controls #homeBtn {
+          order: -1; /* 讓它排在前面，但靠右 */
       }
       .answer-display{gap:4px}
       .answer-letter{min-width:35px;height:45px;font-size:18px}
       .key{min-width:28px;padding:8px;font-size:12px}
-      .key.special{min-width:50px;padding:8px 12px}
       .keyrow{gap:3px}
     }
   </style>
@@ -298,7 +315,6 @@
     <div class="keyboard" id="keyboard"></div>
 
     <div class="controls">
-      <button id="homeBtn" class="ghost">🏠 回首頁</button>
       <button id="hintBtn">提示字母（扣分）</button>
       <button id="showAnswerBtn" class="ghost">顯示答案</button>
       <button id="checkBtn">提交</button>
@@ -609,15 +625,25 @@
           keyboard.appendChild(rowEl);
         });
         
-        // 刪除鍵
-        const rowEl = document.createElement('div');
-        rowEl.className = 'keyrow';
-        const del = document.createElement('button');
-        del.className = 'key special';
-        del.textContent = '⌫ 刪除';
-        del.addEventListener('click', deleteLetter);
-        rowEl.appendChild(del);
-        keyboard.appendChild(rowEl);
+        // 刪除鍵與回首頁鍵
+        const specialKeysRow = document.createElement('div');
+        specialKeysRow.className = 'keyrow';
+		
+		const homeBtnSpecial = document.createElement('button'); // 新建 homeBtn 的實例
+        homeBtnSpecial.className = 'key special';
+        homeBtnSpecial.textContent = '🏠 回首頁';
+        homeBtnSpecial.addEventListener('click', ()=> {
+          window.location.href = 'index.html';
+        });
+        specialKeysRow.appendChild(homeBtnSpecial);
+		  
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'key special';
+        deleteBtn.textContent = '⌫ 刪除';
+        deleteBtn.addEventListener('click', deleteLetter);
+        specialKeysRow.appendChild(deleteBtn);
+        
+        keyboard.appendChild(specialKeysRow);
       }
 
       // 事件監聽
@@ -626,9 +652,10 @@
       checkBtn.addEventListener('click', checkAnswer);
       showAnswerBtn.addEventListener('click', showAnswer);
       pronounceBtn.addEventListener('click', playPronunciation);
-      homeBtn.addEventListener('click', ()=> {
-        window.location.href = 'index.html';
-      });
+      // homeBtn 監聽器已移至 buildKeyboard 函式中，並與刪除鍵放在同一列
+      // homeBtn.addEventListener('click', ()=> {
+      //   window.location.href = 'index.html';
+      // });
 
       // 實體鍵盤支援
       document.addEventListener('keydown', (e)=>{
