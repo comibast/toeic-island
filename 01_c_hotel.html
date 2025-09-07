@@ -556,7 +556,7 @@
         
         if(userInput.toLowerCase() === currentWord.toLowerCase()){
           // 答對了
-          score += 25;
+          score += (25 - hints);
           answered = true;
           completedWords++;
           usedWords.add(currentWord);
