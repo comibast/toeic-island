@@ -192,10 +192,13 @@
     /* 控制按鈕 */
     .controls{
       display:flex;
-      gap:12px;
+      gap:4px;
       justify-content:center;
       margin:20px 0;
       flex-wrap:wrap;
+    }
+    .controls button{
+      min-width:150px;
     }
     button{
       background:var(--accent);
@@ -240,18 +243,27 @@
       margin-top:4px;
     }
 
+    /* 手機版樣式 */
     @media (max-width:600px){
       .card{padding:20px}
       .stats{gap:20px}
-      .controls{
-        flex-direction:column;
-        align-items:center;
+      
+      .controls {
+        flex-direction: column;
+        align-items: stretch;
       }
-      .controls button{
-        width:100%;
-        max-width:280px;
-        min-width:280px;
+      .controls button {
+        width: 100%;
+        min-width: auto;
       }
+      .hint-show-group {
+        display: flex;
+        gap: 12px;
+      }
+      .hint-show-group button {
+        flex: 1;
+      }
+
       .answer-display{gap:4px}
       .answer-letter{min-width:35px;height:45px;font-size:18px}
       .key{min-width:28px;padding:8px;font-size:12px}
@@ -264,8 +276,7 @@
   <div class="card" role="application" aria-label="TOEIC 行銷銷售單字遊戲">
     
     <h1>TOEIC 單字遊戲：行銷銷售</h1>
-    <p class="lead">拼出4個單字，領取元素獎勵！可點擊虛擬鍵盤或使用實體鍵盤輸入。</p>
-    
+
     <div class="rewards">
       <div class="progress-container">
         <div class="progress-bar">
@@ -281,6 +292,10 @@
       <div id="rewardStatus" style="font-size:14px;color:#666;margin-top:8px;">任務進度：完成單字即可獲得獎勵</div>
     </div>
 
+    <div class="status-display">
+      <div id="statusBox" class="status-text">目前狀態：等待答題</div>
+    </div>
+
     <div class="question-area">
       <div class="question-text">
         <span>題目：<strong id="question">-</strong></span>
@@ -289,19 +304,16 @@
       </div>
     </div>
     
-    <div class="status-display">
-      <div id="statusBox" class="status-text">目前狀態：等待答題</div>
-    </div>
-
     <div class="answer-display" id="answerDisplay">
       </div>
 
     <div class="keyboard" id="keyboard"></div>
 
     <div class="controls">
-      <button id="homeBtn" class="ghost">🏠 回首頁</button>
-      <button id="hintBtn">提示：顯示下一個字母（扣分）</button>
-      <button id="showAnswerBtn" class="ghost">顯示答案（不計分）</button>
+      <div class="hint-show-group">
+        <button id="hintBtn">提示字母（扣分）</button>
+        <button id="showAnswerBtn" class="ghost">顯示答案（不計分）</button>
+      </div>
       <button id="checkBtn">提交</button>
       <button id="newBtn" class="ghost">下一題</button>
     </div>
@@ -317,7 +329,11 @@
       </div>
       <div class="stat-item">
         <div class="stat-number" id="hintsCount">0</div>
-        <div class="stat-label">提示次數</div>
+        <div class="stat-label">本次提示</div>
+      </div>
+	  <div class="stat-item">
+        <div class="stat-number" id="totalHintsCount">0</div>
+        <div class="stat-label">總提示</div>
       </div>
     </div>
 
@@ -369,8 +385,8 @@
       const newBtn = document.getElementById('newBtn');
       const checkBtn = document.getElementById('checkBtn');
       const showAnswerBtn = document.getElementById('showAnswerBtn');
-      const homeBtn = document.getElementById('homeBtn');
       const hintsCountEl = document.getElementById('hintsCount');
+      const totalHintsCountEl = document.getElementById('totalHintsCount');
       const scoreDisplayEl = document.getElementById('scoreDisplay');
       const completedCountEl = document.getElementById('completedCount');
       const progressFill = document.getElementById('progressFill');
@@ -381,7 +397,8 @@
       let currentHint = '';
       let currentPos = '';
       let userInput = '';
-      let hints = 0;
+      let hints = 0; // 本題提示次數
+      let totalHints = 0; // 總提示次數
       let score = 0;
       let completedWords = 0;
       let answered = false;
@@ -445,6 +462,7 @@
 
         // 更新統計
         hintsCountEl.textContent = hints;
+        totalHintsCountEl.textContent = totalHints;
         scoreDisplayEl.textContent = score;
         completedCountEl.textContent = completedWords;
         
@@ -513,6 +531,7 @@
         currentHint = picked.hint;
         currentPos = picked.pos;
         userInput = '';
+        hints = 0;
         answered = false;
         
         questionEl.textContent = currentHint;
@@ -540,7 +559,7 @@
           const nextLetter = currentWord[userInput.length];
           userInput += nextLetter;
           hints++;
-          score = Math.max(0, score - 1); // 扣分
+          totalHints++; // 新增這行，紀錄總提示次數
           setStatus(`提示：自動填入字母 "${nextLetter.toUpperCase()}" (扣1分)`, 'warn');
           updateDisplay();
         }
@@ -556,7 +575,7 @@
         
         if(userInput.toLowerCase() === currentWord.toLowerCase()){
           // 答對了
-          score += (25 - hints);
+          score += (25 - hints); // 只在這裡計算並加到總分
           answered = true;
           completedWords++;
           usedWords.add(currentWord);
@@ -567,8 +586,8 @@
           } else {
             const scoreChange = 25 - hints;
             setStatus(`答對了！+${scoreChange} 分。已完成 ${completedWords}/4`, 'ok');
-            hints = 0; // 重置提示次數
           }
+          hints = 0; // 重置本題提示次數
         } else {
           userInput = ''; // 清除輸入讓玩家重新拼寫
           setStatus('答錯了，請重新拼寫', 'error');
@@ -602,14 +621,24 @@
           keyboard.appendChild(rowEl);
         });
         
-        // 刪除鍵
+        // 刪除和回首頁鍵
         const rowEl = document.createElement('div');
         rowEl.className = 'keyrow';
+        
+        const home = document.createElement('button');
+        home.className = 'key special';
+        home.textContent = '🏠 首頁';
+        home.addEventListener('click', ()=> {
+          window.location.href = 'index.html';
+        });
+        rowEl.appendChild(home);
+
         const del = document.createElement('button');
         del.className = 'key special';
         del.textContent = '⌫ 刪除';
         del.addEventListener('click', deleteLetter);
         rowEl.appendChild(del);
+
         keyboard.appendChild(rowEl);
       }
 
@@ -619,9 +648,6 @@
       checkBtn.addEventListener('click', checkAnswer);
       showAnswerBtn.addEventListener('click', showAnswer);
       pronounceBtn.addEventListener('click', playPronunciation);
-      homeBtn.addEventListener('click', ()=> {
-        window.location.href = 'index.html';
-      });
 
       // 實體鍵盤支援
       document.addEventListener('keydown', (e)=>{
