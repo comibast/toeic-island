@@ -240,18 +240,26 @@
       margin-top:4px;
     }
 
+    /* 手機版樣式 */
     @media (max-width:600px){
       .card{padding:20px}
       .stats{gap:20px}
+      
       .controls {
-        flex-direction: row;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: center;
+        flex-direction: column;
+        align-items: stretch;
       }
       .controls button {
-        flex: 1 1 45%;
+        width: 100%;
       }
+      .hint-show-group {
+        display: flex;
+        gap: 12px;
+      }
+      .hint-show-group button {
+        flex: 1;
+      }
+
       .answer-display{gap:4px}
       .answer-letter{min-width:35px;height:45px;font-size:18px}
       .key{min-width:28px;padding:8px;font-size:12px}
@@ -298,8 +306,10 @@
     <div class="keyboard" id="keyboard"></div>
 
     <div class="controls">
-      <button id="hintBtn">提示字母（扣分）</button>
-      <button id="showAnswerBtn" class="ghost">顯示答案（不計分）</button>
+      <div class="hint-show-group">
+        <button id="hintBtn">提示字母（扣分）</button>
+        <button id="showAnswerBtn" class="ghost">顯示答案（不計分）</button>
+      </div>
       <button id="checkBtn">提交</button>
       <button id="newBtn" class="ghost">下一題</button>
     </div>
@@ -371,7 +381,6 @@
       const newBtn = document.getElementById('newBtn');
       const checkBtn = document.getElementById('checkBtn');
       const showAnswerBtn = document.getElementById('showAnswerBtn');
-      const homeBtn = document.getElementById('homeBtn');
       const hintsCountEl = document.getElementById('hintsCount');
       const totalHintsCountEl = document.getElementById('totalHintsCount');
       const scoreDisplayEl = document.getElementById('scoreDisplay');
@@ -608,24 +617,14 @@
           keyboard.appendChild(rowEl);
         });
         
-        // 刪除和回首頁鍵
+        // 刪除鍵
         const rowEl = document.createElement('div');
         rowEl.className = 'keyrow';
-        
-        const home = document.createElement('button');
-        home.className = 'key special';
-        home.textContent = '🏠 首頁';
-        home.addEventListener('click', ()=> {
-          window.location.href = 'index.html';
-        });
-        rowEl.appendChild(home);
-
         const del = document.createElement('button');
         del.className = 'key special';
         del.textContent = '⌫ 刪除';
         del.addEventListener('click', deleteLetter);
         rowEl.appendChild(del);
-
         keyboard.appendChild(rowEl);
       }
 
