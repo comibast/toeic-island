@@ -317,7 +317,11 @@
       </div>
       <div class="stat-item">
         <div class="stat-number" id="hintsCount">0</div>
-        <div class="stat-label">提示次數</div>
+        <div class="stat-label">本次提示</div>
+      </div>
+	  <div class="stat-item">
+        <div class="stat-number" id="totalHintsCount">0</div>
+        <div class="stat-label">總提示</div>
       </div>
     </div>
 
@@ -371,6 +375,7 @@
       const showAnswerBtn = document.getElementById('showAnswerBtn');
       const homeBtn = document.getElementById('homeBtn');
       const hintsCountEl = document.getElementById('hintsCount');
+      const totalHintsCountEl = document.getElementById('totalHintsCount');
       const scoreDisplayEl = document.getElementById('scoreDisplay');
       const completedCountEl = document.getElementById('completedCount');
       const progressFill = document.getElementById('progressFill');
@@ -381,7 +386,8 @@
       let currentHint = '';
       let currentPos = '';
       let userInput = '';
-      let hints = 0;
+      let hints = 0; // 本題提示次數
+      let totalHints = 0; // 總提示次數
       let score = 0;
       let completedWords = 0;
       let answered = false;
@@ -445,6 +451,7 @@
 
         // 更新統計
         hintsCountEl.textContent = hints;
+        totalHintsCountEl.textContent = totalHints;
         scoreDisplayEl.textContent = score;
         completedCountEl.textContent = completedWords;
         
@@ -513,6 +520,7 @@
         currentHint = picked.hint;
         currentPos = picked.pos;
         userInput = '';
+        hints = 0;
         answered = false;
         
         questionEl.textContent = currentHint;
@@ -540,7 +548,7 @@
           const nextLetter = currentWord[userInput.length];
           userInput += nextLetter;
           hints++;
-          score = Math.max(0, score - 1); // 扣分
+          totalHints++; // 新增這行，紀錄總提示次數
           setStatus(`提示：自動填入字母 "${nextLetter.toUpperCase()}" (扣1分)`, 'warn');
           updateDisplay();
         }
@@ -556,7 +564,7 @@
         
         if(userInput.toLowerCase() === currentWord.toLowerCase()){
           // 答對了
-          score += (25 - hints);
+          score += (25 - hints); // 只在這裡計算並加到總分
           answered = true;
           completedWords++;
           usedWords.add(currentWord);
@@ -567,8 +575,8 @@
           } else {
             const scoreChange = 25 - hints;
             setStatus(`答對了！+${scoreChange} 分。已完成 ${completedWords}/4`, 'ok');
-            hints = 0; // 重置提示次數
           }
+          hints = 0; // 重置本題提示次數
         } else {
           userInput = ''; // 清除輸入讓玩家重新拼寫
           setStatus('答錯了，請重新拼寫', 'error');
