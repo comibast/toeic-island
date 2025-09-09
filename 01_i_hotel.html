@@ -7,7 +7,7 @@
   <style>
     :root{--bg:#f6f7fb;--card:#ffffff;--accent:#4b5bdc;--muted:#7b7f9a;--key-bg:#2f3f8f;--key-color:#fff;--status-color:#222}
     *{box-sizing:border-box}
-    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans TC",Helvetica,Arial;display:flex;align-items:center;justify-content:center;padding:24px;margin:0;background:linear-gradient(180deg,var(--bg),#eef2ff);min-height:100vh}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Noto Sans TC",Helvetica,Arial;display:flex;align-items:center;justify-content:center;padding:24px;margin:0;background:linear-gradient(180deg,var(--bg),#eef2ff);min-height:10vh}
     .card{width:800px;max-width:95vw;background:var(--card);border-radius:12px;box-shadow:0 8px 30px rgba(27,38,59,0.08);padding:32px;text-align:center}
     
     h1{margin:0 0 8px;font-size:24px;color:var(--accent)}
@@ -314,6 +314,7 @@
         <button id="hintBtn">提示字母（扣分）</button>
         <button id="showAnswerBtn" class="ghost">顯示答案（不計分）</button>
       </div>
+
       <button id="checkBtn">提交</button>
       <button id="newBtn" class="ghost">下一題</button>
     </div>
@@ -480,11 +481,11 @@
       function updateRewardDisplay(){
         const slots = gemSlots.children;
         const gems = [
-			{ locked: 'img/gems/gem_earth_locked.png', unlocked: 'img/gems/gem_earth.png', name: '地元素' },
-			{ locked: 'img/gems/gem_fire_locked.png', unlocked: 'img/gems/gem_fire.png', name: '火元素' },
-			{ locked: 'img/gems/gem_water_locked.png', unlocked: 'img/gems/gem_water.png', name: '水元素' },
-			{ locked: 'img/gems/gem_wind_locked.png', unlocked: 'img/gems/gem_wind.png', name: '風元素' }
-			  ];
+          { locked: 'img/gems/gem_wind_locked.png', unlocked: 'img/gems/gem_wind.png', name: '風元素' },
+          { locked: 'img/gems/gem_wind_locked.png', unlocked: 'img/gems/gem_wind.png', name: '風元素' },
+          { locked: 'img/gems/gem_wind_locked.png', unlocked: 'img/gems/gem_wind.png', name: '風元素' },
+          { locked: 'img/gems/gem_earth_locked.png', unlocked: 'img/gems/gem_earth.png', name: '地元素' }
+        ];
         
         // 更新元素獎勵
         for(let i = 0; i < 4; i++){
@@ -503,7 +504,7 @@
         const nextGem = completed < 4 ? gems[completed].name : '';
 
         if (completed === 4) {
-            rewardStatus.textContent = `🎉 任務進度：恭喜完成所有任務！獲得：地元素、火元素、水元素、風元素`;
+            rewardStatus.textContent = `🎉 任務進度：恭喜完成所有任務！獲得：風元素、風元素、風元素、地元素`;
         } else if (completed === 0) {
             rewardStatus.textContent = `任務進度：完成單字即可獲得獎勵。第一個獎勵：${nextGem}`;
         } else {
