@@ -358,12 +358,15 @@
       </label>
       <input type="file" id="avatarUpload" accept="image/*" style="display:none">
       
+      <!-- 新的玩家文字資訊結構 -->
       <div class="player-text-info">
+        <!-- 名稱容器：包含玩家名稱和重命名按鈕 -->
         <div class="name-container">
           <span class="player-name" id="playerName">島主</span>
           <img src="img/rename.png" class="rename-icon" alt="rename" id="renameBtn">
         </div>
         
+        <!-- 等級容器 -->
         <div class="level-container">
           <div class="level">LV: <span id="playerLevel">1</span>
             <div class="level-bar"><div class="level-bar-fill" id="levelBar"></div></div>
@@ -374,10 +377,10 @@
     </div>
 
     <div class="resources">
-      <div class="resource"><img src="img/gems/gem_earth.png"><span id="resourceEarth">0</span></div>
-      <div class="resource"><img src="img/gems/gem_fire.png"><span id="resourceFire">0</span></div>
-      <div class="resource"><img src="img/gems/gem_water.png"><span id="resourceWater">0</span></div>
-      <div class="resource"><img src="img/gems/gem_wind.png"><span id="resourceWind">0</span></div>
+      <div class="resource"><img src="img/gems/gem_earth.png"><span>12345</span></div>
+      <div class="resource"><img src="img/gems/gem_fire.png"><span>12345</span></div>
+      <div class="resource"><img src="img/gems/gem_water.png"><span>12345</span></div>
+      <div class="resource"><img src="img/gems/gem_wind.png"><span>12345</span></div>
     </div>
   </header>
 
@@ -432,13 +435,6 @@
     let cityLevels = new Array(20).fill(1);
     let playerName = "島主"; // 新增玩家名稱狀態
     let playerAvatar = "img/avatar.png"; // 預設頭像
-    // 新增資源預設值
-    let resources = {
-        earth: 0,
-        fire: 0,
-        water: 0,
-        wind: 0
-    };
 
     // 嘗試從 localStorage 載入資料
     function loadData() {
@@ -449,8 +445,7 @@
         playerExp = save.playerExp || 0;
         cityLevels = save.cityLevels || new Array(20).fill(1);
         playerName = save.playerName || "島主";
-        playerAvatar = save.playerAvatar || "img/avatar.png"; // 載入頭像
-        resources = save.resources || { earth: 0, fire: 0, water: 0, wind: 0 }; // 載入資源
+        playerAvatar = save.playerAvatar || "img/avatar.png"; // 載入頭像 // 載入玩家名稱
       }
     }
 
@@ -461,8 +456,7 @@
         playerExp,
         cityLevels,
         playerName,
-        playerAvatar, // 儲存頭像
-        resources // 儲存資源
+        playerAvatar // 儲存頭像
       };
       localStorage.setItem("toeicIslandSave", JSON.stringify(save));
     }
@@ -472,19 +466,19 @@
       const grid = document.getElementById("cityGrid");
       grid.innerHTML = "";						// 如要換內頁連結，修改這行以下
         										// 新增檔名對應表
-      const cityFiles = [
-        "01_i_hotel.html", "02_c_restaurant.html", "03_c_mediacenter.html",
-        "04_c_researchcenter.html", "05_c_stockexchange.html", "06_c_headquarters.html",
-        "07_c_hrcenter.html", "08_c_academy.html", "09_c_mall.html",
-        "10_c_callcenter.html", "11_c_businesstower.html", "12_c_factory.html",
-        "13_c_convention.html", "14_c_cityhall.html", "15_c_lab.html",
-        "16_c_bank.html", "17_c_engineerfirm.html", "18_c_tvstation.html",
-        "19_c_artcenter.html", "20_c_hospital.html"
-      ];
+  const cityFiles = [
+    "01_c_hotel.html", "02_c_restaurant.html", "03_c_mediacenter.html",
+    "04_c_researchcenter.html", "05_c_stockexchange.html", "06_c_headquarters.html",
+    "07_c_hrcenter.html", "08_c_academy.html", "09_c_mall.html",
+    "10_c_callcenter.html", "11_c_businesstower.html", "12_c_factory.html",
+    "13_c_convention.html", "14_c_cityhall.html", "15_c_lab.html",
+    "16_c_bank.html", "17_c_engineerfirm.html", "18_c_tvstation.html",
+    "19_c_artcenter.html", "20_c_hospital.html"
+  ];
   
-      cities.forEach((name, i) => {
-        const level = cityLevels[i];
-        const filename = cityFiles[i]; 				
+  cities.forEach((name, i) => {
+    const level = cityLevels[i];
+    const filename = cityFiles[i]; 				
 	  											// 使用對應表
         										// 如要換內頁連結，修改這行以前
         const button = document.createElement("a"); 
@@ -506,11 +500,6 @@
     const islandContainer = document.querySelector('.island-container');
     const citiesSection = document.querySelector('.cities-section');
     const cityGrid = document.getElementById('cityGrid');
-    // 新增獲取資源元素
-    const resourceEarthEl = document.getElementById('resourceEarth');
-    const resourceFireEl = document.getElementById('resourceFire');
-    const resourceWaterEl = document.getElementById('resourceWater');
-    const resourceWindEl = document.getElementById('resourceWind');
 
 
     function updateIsland(level) {
@@ -546,15 +535,6 @@
       playerLevelEl.textContent = playerLevel;
       levelBar.style.width = (playerExp % 100) + "%"; // 假設每100點經驗升級
       avatarImg.src = playerAvatar; // 更新頭像
-      
-      // 更新資源顯示
-      if (resources) {
-        resourceEarthEl.textContent = resources.earth;
-        resourceFireEl.textContent = resources.fire;
-        resourceWaterEl.textContent = resources.water;
-        resourceWindEl.textContent = resources.wind;
-      }
-
       updateIsland(playerLevel);
       renderCities();
       // 確保在所有 DOM 元素渲染完成後才計算高度
