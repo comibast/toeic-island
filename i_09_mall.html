@@ -481,8 +481,8 @@
         const slots = gemSlots.children;
         const gems = [
 			{ locked: 'img/gems/gem_earth_locked.png', unlocked: 'img/gems/gem_earth.png', name: '地元素' },
-			{ locked: 'img/gems/gem_fire_locked.png', unlocked: 'img/gems/gem_fire.png', name: '火元素' },
-			{ locked: 'img/gems/gem_water_locked.png', unlocked: 'img/gems/gem_water.png', name: '水元素' },
+			{ locked: 'img/gems/gem_earth_locked.png', unlocked: 'img/gems/gem_earth.png', name: '地元素' },
+			{ locked: 'img/gems/gem_earth_locked.png', unlocked: 'img/gems/gem_earth.png', name: '地元素' },
 			{ locked: 'img/gems/gem_wind_locked.png', unlocked: 'img/gems/gem_wind.png', name: '風元素' }
 			  ];
         
@@ -503,7 +503,7 @@
         const nextGem = completed < 4 ? gems[completed].name : '';
 
         if (completed === 4) {
-            rewardStatus.textContent = `🎉 任務進度：恭喜完成所有任務！獲得：地元素、火元素、水元素、風元素`;
+            rewardStatus.textContent = `🎉 任務進度：恭喜完成所有任務！獲得：地元素×3、風元素×1`;
         } else if (completed === 0) {
             rewardStatus.textContent = `任務進度：完成單字即可獲得獎勵。第一個獎勵：${nextGem}`;
         } else {
