@@ -26,10 +26,20 @@
     padding:18px;
   }
 
-  .top-bar{
+  /* 上方區塊：玩家資料 + 元素石 */
+  .top-row {
+    display: flex;
+    flex-wrap: wrap;  /* 不夠寬時自動換行 */
+    align-items: center;
+    gap: 12px;
+  }
+
+  .player-info {
     display:flex;
-    gap:12px;
     align-items:center;
+    gap:12px;
+    flex-shrink:0; /* 避免被壓縮 */
+	margin-right:1em; /* ← 與元素石數量保持間距 */
   }
 
   /* 頭像 */
@@ -45,18 +55,17 @@
     display:flex; gap:8px; align-items:center;
     font-weight:700; font-size:16px;
   }
-  .rename-btn{ background:transparent; border:none; cursor:pointer; }
-  .rename-btn img{ width:20px; height:20px; }
-
-  .hint-btn{ background:transparent; border:none; cursor:pointer; }
-  .hint-btn img{ width:20px; height:20px; }
+  .rename-btn, .hint-btn{ background:transparent; border:none; cursor:pointer; }
+  .rename-btn img, .hint-btn img{ width:20px; height:20px; }
 
   /* 元素石數量欄 */
   .gems-bar{
-    margin-left:auto; /* 靠右 */
     display:flex;
-    gap:12px;
-    align-items:center;
+    gap:24px;
+    align-items:left;
+    background:rgba(255,255,255,0.5); /* 白色半透明 */
+    padding:6px 16px; /* 內距讓背景不要太緊貼 */
+    border-radius:12px; /* 圓角 */
   }
   .gem{
     display:flex;
@@ -75,23 +84,28 @@
   /* 小島矩陣 */
   .islands-grid{
     display:grid;
-    grid-template-columns: repeat(5, 1fr); /* 預設電腦版 5 欄 */
+    grid-template-columns: repeat(5, 1fr);
     gap: var(--gap);
     justify-items:center;
-    padding-top:3em; /* 與上方區塊距離 */
+    padding-top:2em;
   }
   .island{ max-width: var(--max-tile-w); text-align:center; }
-  .island .title{ font-size:18px; font-weight:700; }
-  .island .level{
+  .island .title{
+    font-size:18px;
+    font-weight:700;
+    text-align:center;
+  }
+  .island .level-row{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:4px;
     font-size:13px;
     color:var(--muted);
     margin-bottom:6px;
-    display:flex;
-    align-items:center;
-    gap:4px;
   }
-  .island .level img{
-    height:1em; /* 和文字等高 */
+  .island .level-row img{
+    height:1em;
     width:auto;
   }
   .island img{
@@ -114,71 +128,70 @@
   }
   .modal .close{ float:right; cursor:pointer; }
 
-  /* 平板與手機：改為 4 欄 + 間距縮小 */
+  /* 平板與手機：改為 4 欄 */
   @media (max-width:1200px){
     .islands-grid{
       grid-template-columns: repeat(4, 1fr);
-      padding-top:2em;
     }
-    .island img{ height:auto; } /* 保持等比例縮放 */
+    .island img{ height:auto; }
   }
 </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="top-bar">
-      <!-- 點擊頭像上傳 -->
-      <label class="avatar-wrapper">
-        <div class="avatar-preview">
-          <img id="avatarImg" src="img/avatar.png" alt="頭像">
-        </div>
-        <input id="avatarInput" type="file" accept="image/*">
-      </label>
+    <div class="top-row">
+      <!-- 玩家資料 -->
+      <div class="player-info">
+        <!-- 點擊頭像上傳 -->
+        <label class="avatar-wrapper">
+          <div class="avatar-preview">
+            <img id="avatarImg" src="img/avatar.png" alt="頭像">
+          </div>
+          <input id="avatarInput" type="file" accept="image/*">
+        </label>
 
-      <div>
         <div class="player-name-row">
-          <span id="playerName">島主</span>
+          <span id="playerName">十二個中文字測試寬度</span>
           <button class="rename-btn" id="renameBtn">
             <img src="img/rename.png" alt="更名">
+          </button>
+          <button class="hint-btn" id="hintBtn">
+            <img src="img/question.png" alt="說明">
           </button>
         </div>
       </div>
 
-      <button class="hint-btn" id="hintBtn">
-        <img src="img/question.png" alt="說明">
-      </button>
-
       <!-- 元素石數量 -->
       <div class="gems-bar">
-        <div class="gem"><img src="img/gems/gem_earth.png" alt="地"><span id="gemEarth">0</span></div>
-        <div class="gem"><img src="img/gems/gem_fire.png" alt="火"><span id="gemFire">0</span></div>
-        <div class="gem"><img src="img/gems/gem_water.png" alt="水"><span id="gemWater">0</span></div>
-        <div class="gem"><img src="img/gems/gem_wind.png" alt="風"><span id="gemWind">0</span></div>
+        <div class="gem"><img src="img/gems/gem_earth.png" alt="地"><span id="gemEarth">123456</span></div>
+        <div class="gem"><img src="img/gems/gem_fire.png" alt="火"><span id="gemFire">123456</span></div>
+        <div class="gem"><img src="img/gems/gem_water.png" alt="水"><span id="gemWater">123456</span></div>
+        <div class="gem"><img src="img/gems/gem_wind.png" alt="風"><span id="gemWind">123456</span></div>
       </div>
     </div>
 
     <!-- 小島 20 個 -->
     <div class="islands-grid">
-      <div class="island"><div class="title">飯店島</div><div class="level"><img src="img/gems/gem_earth.png" alt="地">LV12</div><a href="i_01_hotel.html"><img src="img/island/island_01.png" alt="飯店島"></a></div>
-      <div class="island"><div class="title">餐館島</div><div class="level"><img src="img/gems/gem_water.png" alt="水">LV8</div><a href="i_02_restaurant.html"><img src="img/island/island_02.png" alt="餐館島"></a></div>
-      <div class="island"><div class="title">行銷島</div><div class="level"><img src="img/gems/gem_fire.png" alt="火">LV20</div><a href="i_03_mediacenter.html"><img src="img/island/island_03.png" alt="行銷島"></a></div>
-      <div class="island"><div class="title">研究島</div><div class="level"><img src="img/gems/gem_wind.png" alt="風">LV4</div><a href="i_04_researchcenter.html"><img src="img/island/island_04.png" alt="研究島"></a></div>
-      <div class="island"><div class="title">證交島</div><div class="level"><img src="img/gems/gem_water.png" alt="水">LV32</div><a href="i_05_stockexchange.html"><img src="img/island/island_05.png" alt="證交島"></a></div>
-      <div class="island"><div class="title">總部島</div><div class="level"><img src="img/gems/gem_earth.png" alt="地">LV15</div><a href="i_06_headquarters.html"><img src="img/island/island_06.png" alt="總部島"></a></div>
-      <div class="island"><div class="title">人資島</div><div class="level"><img src="img/gems/gem_fire.png" alt="火">LV7</div><a href="i_07_hrcenter.html"><img src="img/island/island_07.png" alt="人資島"></a></div>
-      <div class="island"><div class="title">學院島</div><div class="level"><img src="img/gems/gem_wind.png" alt="風">LV2</div><a href="i_08_academy.html"><img src="img/island/island_08.png" alt="學院島"></a></div>
-      <div class="island"><div class="title">購物島</div><div class="level"><img src="img/gems/gem_earth.png" alt="地">LV24</div><a href="i_09_mall.html"><img src="img/island/island_09.png" alt="購物島"></a></div>
-      <div class="island"><div class="title">客服島</div><div class="level"><img src="img/gems/gem_water.png" alt="水">LV9</div><a href="i_10_callcenter.html"><img src="img/island/island_10.png" alt="客服島"></a></div>
-      <div class="island"><div class="title">商塔島</div><div class="level"><img src="img/gems/gem_earth.png" alt="地">LV18</div><a href="i_11_businesstower.html"><img src="img/island/island_11.png" alt="商塔島"></a></div>
-      <div class="island"><div class="title">工廠島</div><div class="level"><img src="img/gems/gem_fire.png" alt="火">LV6</div><a href="i_12_factory.html"><img src="img/island/island_12.png" alt="工廠島"></a></div>
-      <div class="island"><div class="title">會展島</div><div class="level"><img src="img/gems/gem_wind.png" alt="風">LV11</div><a href="i_13_convention.html"><img src="img/island/island_13.png" alt="會展島"></a></div>
-      <div class="island"><div class="title">市政島</div><div class="level"><img src="img/gems/gem_wind.png" alt="風">LV14</div><a href="i_14_cityhall.html"><img src="img/island/island_14.png" alt="市政島"></a></div>
-      <div class="island"><div class="title">實驗島</div><div class="level"><img src="img/gems/gem_fire.png" alt="火">LV3</div><a href="i_15_lab.html"><img src="img/island/island_15.png" alt="實驗島"></a></div>
-      <div class="island"><div class="title">銀行島</div><div class="level"><img src="img/gems/gem_water.png" alt="水">LV27</div><a href="i_16_bank.html"><img src="img/island/island_16.png" alt="銀行島"></a></div>
-      <div class="island"><div class="title">工程島</div><div class="level"><img src="img/gems/gem_earth.png" alt="地">LV5</div><a href="i_17_engineerfirm.html"><img src="img/island/island_17.png" alt="工程島"></a></div>
-      <div class="island"><div class="title">電台島</div><div class="level"><img src="img/gems/gem_wind.png" alt="風">LV21</div><a href="i_18_tvstation.html"><img src="img/island/island_18.png" alt="電台島"></a></div>
-      <div class="island"><div class="title">藝文島</div><div class="level"><img src="img/gems/gem_fire.png" alt="火">LV10</div><a href="i_19_artcenter.html"><img src="img/island/island_19.png" alt="藝文島"></a></div>
-      <div class="island"><div class="title">醫院島</div><div class="level"><img src="img/gems/gem_water.png" alt="水">LV50</div><a href="i_20_hospital.html"><img src="img/island/island_20.png" alt="醫院島"></a></div>
+      <div class="island"><div class="title">飯店島</div><div class="level-row"><img src="img/gems/gem_earth.png" alt="地">LV12</div><a href="i_01_hotel.html"><img src="img/island/island_01.png" alt="飯店島"></a></div>
+      <div class="island"><div class="title">餐館島</div><div class="level-row"><img src="img/gems/gem_water.png" alt="水">LV8</div><a href="i_02_restaurant.html"><img src="img/island/island_02.png" alt="餐館島"></a></div>
+      <div class="island"><div class="title">行銷島</div><div class="level-row"><img src="img/gems/gem_fire.png" alt="火">LV20</div><a href="i_03_mediacenter.html"><img src="img/island/island_03.png" alt="行銷島"></a></div>
+      <div class="island"><div class="title">研究島</div><div class="level-row"><img src="img/gems/gem_wind.png" alt="風">LV4</div><a href="i_04_researchcenter.html"><img src="img/island/island_04.png" alt="研究島"></a></div>
+      <div class="island"><div class="title">證交島</div><div class="level-row"><img src="img/gems/gem_water.png" alt="水">LV32</div><a href="i_05_stockexchange.html"><img src="img/island/island_05.png" alt="證交島"></a></div>
+      <div class="island"><div class="title">總部島</div><div class="level-row"><img src="img/gems/gem_earth.png" alt="地">LV15</div><a href="i_06_headquarters.html"><img src="img/island/island_06.png" alt="總部島"></a></div>
+      <div class="island"><div class="title">人資島</div><div class="level-row"><img src="img/gems/gem_fire.png" alt="火">LV7</div><a href="i_07_hrcenter.html"><img src="img/island/island_07.png" alt="人資島"></a></div>
+      <div class="island"><div class="title">學院島</div><div class="level-row"><img src="img/gems/gem_wind.png" alt="風">LV2</div><a href="i_08_academy.html"><img src="img/island/island_08.png" alt="學院島"></a></div>
+      <div class="island"><div class="title">購物島</div><div class="level-row"><img src="img/gems/gem_earth.png" alt="地">LV24</div><a href="i_09_mall.html"><img src="img/island/island_09.png" alt="購物島"></a></div>
+      <div class="island"><div class="title">客服島</div><div class="level-row"><img src="img/gems/gem_water.png" alt="水">LV9</div><a href="i_10_callcenter.html"><img src="img/island/island_10.png" alt="客服島"></a></div>
+      <div class="island"><div class="title">商塔島</div><div class="level-row"><img src="img/gems/gem_earth.png" alt="地">LV18</div><a href="i_11_businesstower.html"><img src="img/island/island_11.png" alt="商塔島"></a></div>
+      <div class="island"><div class="title">工廠島</div><div class="level-row"><img src="img/gems/gem_fire.png" alt="火">LV6</div><a href="i_12_factory.html"><img src="img/island/island_12.png" alt="工廠島"></a></div>
+      <div class="island"><div class="title">會展島</div><div class="level-row"><img src="img/gems/gem_wind.png" alt="風">LV11</div><a href="i_13_convention.html"><img src="img/island/island_13.png" alt="會展島"></a></div>
+      <div class="island"><div class="title">市政島</div><div class="level-row"><img src="img/gems/gem_wind.png" alt="風">LV14</div><a href="i_14_cityhall.html"><img src="img/island/island_14.png" alt="市政島"></a></div>
+      <div class="island"><div class="title">實驗島</div><div class="level-row"><img src="img/gems/gem_fire.png" alt="火">LV3</div><a href="i_15_lab.html"><img src="img/island/island_15.png" alt="實驗島"></a></div>
+      <div class="island"><div class="title">銀行島</div><div class="level-row"><img src="img/gems/gem_water.png" alt="水">LV27</div><a href="i_16_bank.html"><img src="img/island/island_16.png" alt="銀行島"></a></div>
+      <div class="island"><div class="title">工程島</div><div class="level-row"><img src="img/gems/gem_earth.png" alt="地">LV5</div><a href="i_17_engineerfirm.html"><img src="img/island/island_17.png" alt="工程島"></a></div>
+      <div class="island"><div class="title">電台島</div><div class="level-row"><img src="img/gems/gem_wind.png" alt="風">LV21</div><a href="i_18_tvstation.html"><img src="img/island/island_18.png" alt="電台島"></a></div>
+      <div class="island"><div class="title">藝文島</div><div class="level-row"><img src="img/gems/gem_fire.png" alt="火">LV10</div><a href="i_19_artcenter.html"><img src="img/island/island_19.png" alt="藝文島"></a></div>
+      <div class="island"><div class="title">醫院島</div><div class="level-row"><img src="img/gems/gem_water.png" alt="水">LV50</div><a href="i_20_hospital.html"><img src="img/island/island_20.png" alt="醫院島"></a></div>
     </div>
   </div>
 
@@ -226,7 +239,7 @@
     reader.readAsDataURL(file);
   });
 
-  // 玩家更名 (限制12字，超過會警告)
+  // 玩家更名 (限制12字)
   document.getElementById('renameBtn').addEventListener('click',()=>{
     const current=playerNameEl.textContent;
     const newName=prompt('輸入新名稱 (最多12字)：',current);
@@ -245,13 +258,6 @@
   document.getElementById('hintBtn').onclick=()=>modal.style.display='flex';
   document.getElementById('modalClose').onclick=()=>modal.style.display='none';
   modal.onclick=e=>{if(e.target===modal) modal.style.display='none';};
-
-  // 假設有資源數量（之後可從伺服器更新）
-  const gems = { earth: 123, fire: 456, water: 789, wind: 321 };
-  document.getElementById('gemEarth').textContent = gems.earth;
-  document.getElementById('gemFire').textContent = gems.fire;
-  document.getElementById('gemWater').textContent = gems.water;
-  document.getElementById('gemWind').textContent = gems.wind;
 </script>
 </body>
 </html>
