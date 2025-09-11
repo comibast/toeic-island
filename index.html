@@ -135,6 +135,23 @@
     }
     .island img{ height:auto; }
   }
+  /* 手機版的元素石數量條，等比縮小到和手機寬度一樣寬。 */
+  @media (max-width:480px){
+  .gems-bar {
+    width: 100%; /* 全寬度 */
+    gap: 8px; /* 縮小間距 */
+    padding: 6px 12px; /* 調整內距 */
+  }
+  
+  .gem img {
+    width: 16px; /* 縮小圖標 */
+    height: 16px;
+  }
+  
+  .gem span {
+    font-size: 12px; /* 縮小字體 */
+  }
+}
 </style>
 </head>
 <body>
