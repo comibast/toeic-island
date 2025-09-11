@@ -30,7 +30,7 @@
     display:flex;
     gap:12px;
     align-items:center;
-    margin-bottom:32px;    /*「玩家資料區」和「島嶼矩陣」的距離 */
+    /* 原本的 margin-bottom:32px; 移除，改由 islands-grid 控制距離 */
   }
 
   /* 頭像 */
@@ -58,6 +58,7 @@
     grid-template-columns: repeat(5, 1fr); /* 預設電腦版 5 欄 */
     gap: var(--gap);
     justify-items:center;
+    padding-top:3em; /* 電腦版：玩家資料與矩陣的距離 */
   }
   .island{ max-width: var(--max-tile-w); text-align:center; }
   .island .title{ font-size:18px; font-weight:700; }
@@ -82,9 +83,12 @@
   }
   .modal .close{ float:right; cursor:pointer; }
 
-  /* 平板與手機：改為 4 欄 */
+  /* 平板與手機：改為 4 欄 + 間距縮小 */
   @media (max-width:1200px){
-    .islands-grid{ grid-template-columns: repeat(4, 1fr); }
+    .islands-grid{
+      grid-template-columns: repeat(4, 1fr);
+      padding-top:2em; /* 平板與手機：縮小間距 */
+    }
     .island img{ height:auto; } /* 保持等比例縮放 */
   }
 </style>
@@ -110,8 +114,8 @@
       </div>
 
       <button class="hint-btn" id="hintBtn">
-		  <img src="img/question.png" alt="說明">
-		</button>
+        <img src="img/question.png" alt="說明">
+      </button>
     </div>
 
     <!-- 小島 20 個 -->
